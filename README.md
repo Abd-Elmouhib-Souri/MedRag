@@ -55,12 +55,6 @@ medrag/
 │   └── report_generator.py   # PDF report (ReportLab)
 ├── frontend/
 │   └── ui.py                 # Streamlit interface
-├── tests/
-│   ├── test_step1.py         # PDF + chunking
-│   ├── test_step2.py         # Embeddings
-│   ├── test_step3.py         # ChromaDB
-│   ├── test_step4.py         # LLM
-│   └── test_step5.py         # Full RAG pipeline
 ├── data/                     # gitignored — patient data stays local
 ├── .env.example
 └── requirements.txt
@@ -166,17 +160,6 @@ Switch to **Comparaison** mode in the sidebar, select 2 records, then ask:
 
 ### Step 4 — Export
 Click **📄 Exporter rapport PDF** in the sidebar to download the full session as a PDF report.
-
-### Run unit tests
-
-```bash
-conda activate medrag
-python test_step1.py   # PDF extraction + chunking
-python test_step2.py   # Embeddings
-python test_step3.py   # ChromaDB
-python test_step4.py   # LLM connection
-python test_step5.py   # Full RAG pipeline
-```
 
 ---
 
