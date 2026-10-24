@@ -1,0 +1,364 @@
+{
+  "reranker": "BAAI/bge-reranker-v2-m3",
+  "chunk_size": 600,
+  "rewrite": true,
+  "scores": [
+    {
+      "collection": "dossier_ben_amor_hedi",
+      "question": "Quelle est la dose de warfarine prescrite au départ ?",
+      "in_scope": true,
+      "expected_page": 2,
+      "expected_terms": [
+        "5 mg"
+      ],
+      "query_scored": "Quelle est la dose de warfarine prescrite au départ ?",
+      "top_score": 0.2593,
+      "retrieval_ms": 4746
+    },
+    {
+      "collection": "dossier_ben_amor_hedi",
+      "question": "Quel était le dernier INR ?",
+      "in_scope": true,
+      "expected_page": 3,
+      "expected_terms": [
+        "3,8"
+      ],
+      "query_scored": "Quel était le dernier INR?",
+      "top_score": 0.6466,
+      "retrieval_ms": 2064
+    },
+    {
+      "collection": "dossier_ben_amor_hedi",
+      "question": "Le patient a-t-il une allergie ?",
+      "in_scope": true,
+      "expected_page": 1,
+      "expected_terms": [
+        "iode"
+      ],
+      "query_scored": "Le patient a-t-il une allergie ?",
+      "top_score": 0.4173,
+      "retrieval_ms": 1053
+    },
+    {
+      "collection": "dossier_ben_amor_hedi",
+      "question": "Peut-on lui donner de l'aspirine ?",
+      "in_scope": true,
+      "expected_page": 2,
+      "expected_terms": [
+        "hémorragique"
+      ],
+      "query_scored": "Peut-on lui donner de l'aspirine?",
+      "top_score": 0.014,
+      "retrieval_ms": 2013
+    },
+    {
+      "collection": "dossier_ben_amor_hedi",
+      "question": "Quelle décision a été prise après l'INR élevé ?",
+      "in_scope": true,
+      "expected_page": 3,
+      "expected_terms": [
+        "4 mg"
+      ],
+      "query_scored": "Quelle décision a été prise après l'INR élevé ?",
+      "top_score": 0.0683,
+      "retrieval_ms": 984
+    },
+    {
+      "collection": "dossier_ben_amor_hedi",
+      "question": "quell anticoagulan il prend ?",
+      "in_scope": true,
+      "expected_page": 2,
+      "expected_terms": [
+        "warfarine"
+      ],
+      "query_scored": "Quel anticoagulant prend-il?",
+      "top_score": 0.0035,
+      "retrieval_ms": 2146
+    },
+    {
+      "collection": "dossier_gharbi_salma",
+      "question": "Quel est son traitement de fond de l'asthme ?",
+      "in_scope": true,
+      "expected_page": 2,
+      "expected_terms": [
+        "budésonide"
+      ],
+      "query_scored": "Quel est son traitement de fond de l'asthme?",
+      "top_score": 0.2425,
+      "retrieval_ms": 2748
+    },
+    {
+      "collection": "dossier_gharbi_salma",
+      "question": "Quel est le résultat de la spirométrie ?",
+      "in_scope": true,
+      "expected_page": 3,
+      "expected_terms": [
+        "78"
+      ],
+      "query_scored": "Quel est le résultat de la spirométrie ?",
+      "top_score": 0.1577,
+      "retrieval_ms": 1307
+    },
+    {
+      "collection": "dossier_gharbi_salma",
+      "question": "Quelles sont ses allergies ?",
+      "in_scope": true,
+      "expected_page": 1,
+      "expected_terms": [
+        "acariens"
+      ],
+      "query_scored": "Quelles sont ses allergies ?",
+      "top_score": 0.1007,
+      "retrieval_ms": 1272
+    },
+    {
+      "collection": "dossier_gharbi_salma",
+      "question": "Est-elle enceinte ?",
+      "in_scope": true,
+      "expected_page": 4,
+      "expected_terms": [
+        "20 semaines"
+      ],
+      "query_scored": "Est-elle enceinte?",
+      "top_score": 0.0038,
+      "retrieval_ms": 2560
+    },
+    {
+      "collection": "dossier_gharbi_salma",
+      "question": "What is her rescue inhaler?",
+      "in_scope": true,
+      "expected_page": 2,
+      "expected_terms": [
+        "salbutamol"
+      ],
+      "query_scored": "Quel est son inhalateur de secours ?",
+      "top_score": 0.0012,
+      "retrieval_ms": 2716
+    },
+    {
+      "collection": "dossier_trabelsi_youssef",
+      "question": "Quels médicaments prend le patient ?",
+      "in_scope": true,
+      "expected_page": 2,
+      "expected_terms": [
+        "metformine"
+      ],
+      "query_scored": "Quels médicaments prend le patient ?",
+      "top_score": 0.1184,
+      "retrieval_ms": 1344
+    },
+    {
+      "collection": "dossier_trabelsi_youssef",
+      "question": "Quelle est la dernière HbA1c ?",
+      "in_scope": true,
+      "expected_page": 3,
+      "expected_terms": [
+        "8,1"
+      ],
+      "query_scored": "Quelle est la dernière HbA1c ?",
+      "top_score": 0.1445,
+      "retrieval_ms": 1373
+    },
+    {
+      "collection": "dossier_trabelsi_youssef",
+      "question": "A quoi est-il allergique ?",
+      "in_scope": true,
+      "expected_page": 1,
+      "expected_terms": [
+        "pénicilline"
+      ],
+      "query_scored": "À quoi est-il allergique?",
+      "top_score": 0.0263,
+      "retrieval_ms": 2584
+    },
+    {
+      "collection": "dossier_trabelsi_youssef",
+      "question": "Quel médicament a été ajouté ?",
+      "in_scope": true,
+      "expected_page": 3,
+      "expected_terms": [
+        "sitagliptine"
+      ],
+      "query_scored": "Quel médicament a été ajouté?",
+      "top_score": 0.0722,
+      "retrieval_ms": 2677
+    },
+    {
+      "collection": "dossier_trabelsi_youssef",
+      "question": "Y a-t-il une rétinopathie ?",
+      "in_scope": true,
+      "expected_page": 4,
+      "expected_terms": [
+        [
+          "sans rétinopathie",
+          "pas de rétinopathie",
+          "aucune rétinopathie"
+        ]
+      ],
+      "query_scored": "Y a-t-il une rétinopathie ?",
+      "top_score": 0.2361,
+      "retrieval_ms": 1329
+    },
+    {
+      "collection": "dossier_trabelsi_youssef",
+      "question": "ما هي جرعة الميتفورمين؟",
+      "in_scope": true,
+      "expected_page": 2,
+      "expected_terms": [
+        "1000"
+      ],
+      "query_scored": "Quelle est la dose de metformine ?",
+      "top_score": 0.4925,
+      "retrieval_ms": 2703
+    },
+    {
+      "collection": "dossier_mansour_lina",
+      "question": "Quel antiépileptique prend l'enfant ?",
+      "in_scope": true,
+      "expected_page": 2,
+      "expected_terms": [
+        "valproate"
+      ],
+      "query_scored": "Quel antiépileptique prend l'enfant?",
+      "top_score": 0.0238,
+      "retrieval_ms": 1783
+    },
+    {
+      "collection": "dossier_mansour_lina",
+      "question": "Quels médicaments sont contre-indiqués ?",
+      "in_scope": true,
+      "expected_page": 2,
+      "expected_terms": [
+        "aspirine"
+      ],
+      "query_scored": "Quels médicaments sont contre-indiqués ?",
+      "top_score": 0.0244,
+      "retrieval_ms": 872
+    },
+    {
+      "collection": "dossier_mansour_lina",
+      "question": "Quel est le résultat du dernier EEG ?",
+      "in_scope": true,
+      "expected_page": 3,
+      "expected_terms": [
+        "diminution"
+      ],
+      "query_scored": "Quel est le résultat du dernier EEG ?",
+      "top_score": 0.0175,
+      "retrieval_ms": 841
+    },
+    {
+      "collection": "dossier_ben_amor_hedi",
+      "question": "Qui a gagné la Coupe du monde 2022 ?",
+      "in_scope": false,
+      "query_scored": "Qui a gagné la Coupe du monde 2022 ?",
+      "top_score": 0.0,
+      "retrieval_ms": 1006
+    },
+    {
+      "collection": "dossier_ben_amor_hedi",
+      "question": "Quelle est la valeur de la dernière HbA1c ?",
+      "in_scope": false,
+      "query_scored": "Quelle est la valeur de la dernière HbA1c?",
+      "top_score": 0.0015,
+      "retrieval_ms": 2151
+    },
+    {
+      "collection": "dossier_ben_amor_hedi",
+      "question": "Le patient est-il vacciné contre la grippe ?",
+      "in_scope": false,
+      "query_scored": "Le patient est-il vacciné contre la grippe ?",
+      "top_score": 0.0032,
+      "retrieval_ms": 1044
+    },
+    {
+      "collection": "dossier_gharbi_salma",
+      "question": "Donne-moi une recette de couscous.",
+      "in_scope": false,
+      "query_scored": "Donne-moi une recette de couscous?",
+      "top_score": 0.0,
+      "retrieval_ms": 2749
+    },
+    {
+      "collection": "dossier_gharbi_salma",
+      "question": "Quelle est la dose de metformine ?",
+      "in_scope": false,
+      "query_scored": "Quelle est la dose de metformine ?",
+      "top_score": 0.0018,
+      "retrieval_ms": 1273
+    },
+    {
+      "collection": "dossier_gharbi_salma",
+      "question": "Quel est son taux de cholestérol ?",
+      "in_scope": false,
+      "query_scored": "Quel est son taux de cholestérol?",
+      "top_score": 0.0005,
+      "retrieval_ms": 2811
+    },
+    {
+      "collection": "dossier_trabelsi_youssef",
+      "question": "Quel est le résultat de l'EEG ?",
+      "in_scope": false,
+      "query_scored": "Quel est le résultat de l'EEG ?",
+      "top_score": 0.0019,
+      "retrieval_ms": 1307
+    },
+    {
+      "collection": "dossier_trabelsi_youssef",
+      "question": "Comment installer Python sur Windows ?",
+      "in_scope": false,
+      "query_scored": "Comment installer Python sur Windows ?",
+      "top_score": 0.0,
+      "retrieval_ms": 1342
+    },
+    {
+      "collection": "dossier_trabelsi_youssef",
+      "question": "What is the capital of Canada?",
+      "in_scope": false,
+      "query_scored": "Quelle est la capitale du Canada?",
+      "top_score": 0.0,
+      "retrieval_ms": 2667
+    },
+    {
+      "collection": "dossier_mansour_lina",
+      "question": "Quelle est la dose de warfarine ?",
+      "in_scope": false,
+      "query_scored": "Quelle est la dose de warfarine ?",
+      "top_score": 0.0014,
+      "retrieval_ms": 858
+    },
+    {
+      "collection": "dossier_mansour_lina",
+      "question": "Quel est le prix d'un iPhone ?",
+      "in_scope": false,
+      "query_scored": "Quel est le prix d'un iPhone ?",
+      "top_score": 0.0,
+      "retrieval_ms": 829
+    },
+    {
+      "collection": "dossier_mansour_lina",
+      "question": "Quel est son résultat de spirométrie ?",
+      "in_scope": false,
+      "query_scored": "Quel est son résultat de spirométrie ?",
+      "top_score": 0.0003,
+      "retrieval_ms": 842
+    }
+  ],
+  "best": {
+    "threshold": 0.00335,
+    "in_scope_kept": 0.95,
+    "out_of_scope_rejected": 1.0,
+    "balanced_accuracy": 0.975
+  },
+  "roc_auc": 0.9791666666666666,
+  "loo_balanced_accuracy": 0.9333333333333333,
+  "retrieval_ms_p50": 1344,
+  "recall_threshold": {
+    "target_recall": 0.95,
+    "threshold": 0.00335,
+    "dev_kept": 0.95,
+    "dev_rejected": 1.0,
+    "loo_kept": 0.95,
+    "loo_rejected": 0.9166666666666666
+  }
+}

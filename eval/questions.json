@@ -1,0 +1,246 @@
+[
+  {
+    "collection": "dossier_ben_amor_hedi",
+    "question": "Quelle est la dose de warfarine prescrite au départ ?",
+    "in_scope": true,
+    "expected_page": 2,
+    "expected_terms": [
+      "5 mg"
+    ]
+  },
+  {
+    "collection": "dossier_ben_amor_hedi",
+    "question": "Quel était le dernier INR ?",
+    "in_scope": true,
+    "expected_page": 3,
+    "expected_terms": [
+      "3,8"
+    ]
+  },
+  {
+    "collection": "dossier_ben_amor_hedi",
+    "question": "Le patient a-t-il une allergie ?",
+    "in_scope": true,
+    "expected_page": 1,
+    "expected_terms": [
+      "iode"
+    ]
+  },
+  {
+    "collection": "dossier_ben_amor_hedi",
+    "question": "Peut-on lui donner de l'aspirine ?",
+    "in_scope": true,
+    "expected_page": 2,
+    "expected_terms": [
+      "hémorragique"
+    ]
+  },
+  {
+    "collection": "dossier_ben_amor_hedi",
+    "question": "Quelle décision a été prise après l'INR élevé ?",
+    "in_scope": true,
+    "expected_page": 3,
+    "expected_terms": [
+      "4 mg"
+    ]
+  },
+  {
+    "collection": "dossier_ben_amor_hedi",
+    "question": "quell anticoagulan il prend ?",
+    "in_scope": true,
+    "expected_page": 2,
+    "expected_terms": [
+      "warfarine"
+    ]
+  },
+  {
+    "collection": "dossier_gharbi_salma",
+    "question": "Quel est son traitement de fond de l'asthme ?",
+    "in_scope": true,
+    "expected_page": 2,
+    "expected_terms": [
+      "budésonide"
+    ]
+  },
+  {
+    "collection": "dossier_gharbi_salma",
+    "question": "Quel est le résultat de la spirométrie ?",
+    "in_scope": true,
+    "expected_page": 3,
+    "expected_terms": [
+      "78"
+    ]
+  },
+  {
+    "collection": "dossier_gharbi_salma",
+    "question": "Quelles sont ses allergies ?",
+    "in_scope": true,
+    "expected_page": 1,
+    "expected_terms": [
+      "acariens"
+    ]
+  },
+  {
+    "collection": "dossier_gharbi_salma",
+    "question": "Est-elle enceinte ?",
+    "in_scope": true,
+    "expected_page": 4,
+    "expected_terms": [
+      "20 semaines"
+    ]
+  },
+  {
+    "collection": "dossier_gharbi_salma",
+    "question": "What is her rescue inhaler?",
+    "in_scope": true,
+    "expected_page": 2,
+    "expected_terms": [
+      "salbutamol"
+    ]
+  },
+  {
+    "collection": "dossier_trabelsi_youssef",
+    "question": "Quels médicaments prend le patient ?",
+    "in_scope": true,
+    "expected_page": 2,
+    "expected_terms": [
+      "metformine"
+    ]
+  },
+  {
+    "collection": "dossier_trabelsi_youssef",
+    "question": "Quelle est la dernière HbA1c ?",
+    "in_scope": true,
+    "expected_page": 3,
+    "expected_terms": [
+      "8,1"
+    ]
+  },
+  {
+    "collection": "dossier_trabelsi_youssef",
+    "question": "A quoi est-il allergique ?",
+    "in_scope": true,
+    "expected_page": 1,
+    "expected_terms": [
+      "pénicilline"
+    ]
+  },
+  {
+    "collection": "dossier_trabelsi_youssef",
+    "question": "Quel médicament a été ajouté ?",
+    "in_scope": true,
+    "expected_page": 3,
+    "expected_terms": [
+      "sitagliptine"
+    ]
+  },
+  {
+    "collection": "dossier_trabelsi_youssef",
+    "question": "Y a-t-il une rétinopathie ?",
+    "in_scope": true,
+    "expected_page": 4,
+    "expected_terms": [
+      [
+        "sans rétinopathie",
+        "pas de rétinopathie",
+        "aucune rétinopathie"
+      ]
+    ]
+  },
+  {
+    "collection": "dossier_trabelsi_youssef",
+    "question": "ما هي جرعة الميتفورمين؟",
+    "in_scope": true,
+    "expected_page": 2,
+    "expected_terms": [
+      "1000"
+    ]
+  },
+  {
+    "collection": "dossier_mansour_lina",
+    "question": "Quel antiépileptique prend l'enfant ?",
+    "in_scope": true,
+    "expected_page": 2,
+    "expected_terms": [
+      "valproate"
+    ]
+  },
+  {
+    "collection": "dossier_mansour_lina",
+    "question": "Quels médicaments sont contre-indiqués ?",
+    "in_scope": true,
+    "expected_page": 2,
+    "expected_terms": [
+      "aspirine"
+    ]
+  },
+  {
+    "collection": "dossier_mansour_lina",
+    "question": "Quel est le résultat du dernier EEG ?",
+    "in_scope": true,
+    "expected_page": 3,
+    "expected_terms": [
+      "diminution"
+    ]
+  },
+  {
+    "collection": "dossier_ben_amor_hedi",
+    "question": "Qui a gagné la Coupe du monde 2022 ?",
+    "in_scope": false
+  },
+  {
+    "collection": "dossier_ben_amor_hedi",
+    "question": "Quelle est la valeur de la dernière HbA1c ?",
+    "in_scope": false
+  },
+  {
+    "collection": "dossier_ben_amor_hedi",
+    "question": "Le patient est-il vacciné contre la grippe ?",
+    "in_scope": false
+  },
+  {
+    "collection": "dossier_gharbi_salma",
+    "question": "Donne-moi une recette de couscous.",
+    "in_scope": false
+  },
+  {
+    "collection": "dossier_gharbi_salma",
+    "question": "Quelle est la dose de metformine ?",
+    "in_scope": false
+  },
+  {
+    "collection": "dossier_gharbi_salma",
+    "question": "Quel est son taux de cholestérol ?",
+    "in_scope": false
+  },
+  {
+    "collection": "dossier_trabelsi_youssef",
+    "question": "Quel est le résultat de l'EEG ?",
+    "in_scope": false
+  },
+  {
+    "collection": "dossier_trabelsi_youssef",
+    "question": "Comment installer Python sur Windows ?",
+    "in_scope": false
+  },
+  {
+    "collection": "dossier_trabelsi_youssef",
+    "question": "What is the capital of Canada?",
+    "in_scope": false
+  },
+  {
+    "collection": "dossier_mansour_lina",
+    "question": "Quelle est la dose de warfarine ?",
+    "in_scope": false
+  },
+  {
+    "collection": "dossier_mansour_lina",
+    "question": "Quel est le prix d'un iPhone ?",
+    "in_scope": false
+  },
+  {
+    "collection": "dossier_mansour_lina",
+    "question": "Quel est son résultat de spirométrie ?",
+    "in_scope": false
+  }
+]

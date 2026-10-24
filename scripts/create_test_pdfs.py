@@ -1,6 +1,6 @@
 """Génère des PDFs médicaux synthétiques pour les tests MedRAG."""
 import os
-import fitz
+import pymupdf  # PyMuPDF (the old "fitz" import name is deprecated)
 
 SAMPLE_DIR = os.path.join("data", "sample_docs")
 
@@ -62,7 +62,7 @@ def main():
     os.makedirs(SAMPLE_DIR, exist_ok=True)
     for patient in PATIENTS:
         path = os.path.join(SAMPLE_DIR, patient["filename"])
-        doc = fitz.open()
+        doc = pymupdf.open()
         page = doc.new_page()
         page.insert_text((50, 50), patient["text"].strip(), fontsize=11)
         doc.save(path)

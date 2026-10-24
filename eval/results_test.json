@@ -1,0 +1,465 @@
+{
+  "settings": {
+    "llm": "openai/gpt-oss-120b",
+    "llm_fast": "openai/gpt-oss-20b",
+    "reranker": "BAAI/bge-reranker-v2-m3",
+    "threshold": 0.0034,
+    "embeddings": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+    "chunk_size": 600
+  },
+  "metrics": {
+    "questions": 19,
+    "in_scope": 11,
+    "out_of_scope": 8,
+    "retrieval_hit_at_5": 0.909,
+    "answer_accuracy": 0.909,
+    "false_refusal_rate": 0.091,
+    "out_of_scope_refusal_rate": 1.0,
+    "out_of_scope_refused_by_gate": 1.0,
+    "out_of_scope_refused_by_llm": 0.0,
+    "grounded_answer_rate": 1.0,
+    "latency_p50_s": 5.41,
+    "latency_p95_s": 20.01
+  },
+  "rows": [
+    {
+      "collection": "dossier_ben_amor_hedi",
+      "question": "Quel est son groupe sanguin ?",
+      "in_scope": true,
+      "expected_page": 1,
+      "expected_terms": [
+        [
+          "A positif",
+          "A+"
+        ]
+      ],
+      "refused": false,
+      "refused_by": null,
+      "pages": [
+        1
+      ],
+      "latency_s": 14.79,
+      "answer": "Son groupe sanguin est A positif. [Page 1]",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": ""
+      },
+      "top_score": 0.1655,
+      "hit": true,
+      "correct": true
+    },
+    {
+      "collection": "dossier_ben_amor_hedi",
+      "question": "En quelle année a-t-il fait un accident ischémique transitoire ?",
+      "in_scope": true,
+      "expected_page": 1,
+      "expected_terms": [
+        "2021"
+      ],
+      "refused": false,
+      "refused_by": null,
+      "pages": [
+        1
+      ],
+      "latency_s": 11.35,
+      "answer": "Il a eu un accident ischémique transitoire en 2021. [Page 1]",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": ""
+      },
+      "top_score": 0.8221,
+      "hit": true,
+      "correct": true
+    },
+    {
+      "collection": "dossier_ben_amor_hedi",
+      "question": "Quel bêtabloquant prend-il ?",
+      "in_scope": true,
+      "expected_page": 2,
+      "expected_terms": [
+        "bisoprolol"
+      ],
+      "refused": true,
+      "refused_by": "gate",
+      "pages": [],
+      "latency_s": 3.92,
+      "answer": "Information non trouvée dans les documents fournis.",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": "refused by relevance gate"
+      },
+      "top_score": 0.0011,
+      "hit": false,
+      "correct": false
+    },
+    {
+      "collection": "dossier_gharbi_salma",
+      "question": "Quel est le groupe sanguin de la patiente ?",
+      "in_scope": true,
+      "expected_page": 1,
+      "expected_terms": [
+        [
+          "négatif",
+          "O-",
+          "O−"
+        ]
+      ],
+      "refused": false,
+      "refused_by": null,
+      "pages": [
+        1
+      ],
+      "latency_s": 17.63,
+      "answer": "Le groupe sanguin de la patiente est O négatif. [Page 1]",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": ""
+      },
+      "top_score": 0.3623,
+      "hit": true,
+      "correct": true
+    },
+    {
+      "collection": "dossier_gharbi_salma",
+      "question": "De combien de semaines est la grossesse ?",
+      "in_scope": true,
+      "expected_page": 4,
+      "expected_terms": [
+        "20"
+      ],
+      "refused": false,
+      "refused_by": null,
+      "pages": [
+        4
+      ],
+      "latency_s": 12.01,
+      "answer": "La grossesse est de 20 semaines d’aménorrhée. [Page 4]",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": ""
+      },
+      "top_score": 0.8385,
+      "hit": true,
+      "correct": true
+    },
+    {
+      "collection": "dossier_gharbi_salma",
+      "question": "À quelle date la spirométrie a-t-elle été faite ?",
+      "in_scope": true,
+      "expected_page": 3,
+      "expected_terms": [
+        [
+          "3 juin",
+          "03/06",
+          "3/06"
+        ]
+      ],
+      "refused": false,
+      "refused_by": null,
+      "pages": [
+        3
+      ],
+      "latency_s": 3.78,
+      "answer": "La spirométrie a été réalisée le 3 juin 2026. [Page 3]",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": ""
+      },
+      "top_score": 0.0685,
+      "hit": true,
+      "correct": true
+    },
+    {
+      "collection": "dossier_trabelsi_youssef",
+      "question": "Quel est son débit de filtration ?",
+      "in_scope": true,
+      "expected_page": 3,
+      "expected_terms": [
+        "68"
+      ],
+      "refused": false,
+      "refused_by": null,
+      "pages": [
+        3
+      ],
+      "latency_s": 4.42,
+      "answer": "Le débit de filtration est de 68 mL/min. [Page 3]",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": ""
+      },
+      "top_score": 0.3387,
+      "hit": true,
+      "correct": true
+    },
+    {
+      "collection": "dossier_trabelsi_youssef",
+      "question": "Which statin does he take?",
+      "in_scope": true,
+      "expected_page": 2,
+      "expected_terms": [
+        "atorvastatin"
+      ],
+      "refused": false,
+      "refused_by": null,
+      "pages": [
+        2
+      ],
+      "latency_s": 5.41,
+      "answer": "He takes atorvastatin. [Page 2]",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": ""
+      },
+      "top_score": 0.0047,
+      "hit": true,
+      "correct": true
+    },
+    {
+      "collection": "dossier_mansour_lina",
+      "question": "ما هو وزن الطفلة؟",
+      "in_scope": true,
+      "expected_page": 1,
+      "expected_terms": [
+        "26"
+      ],
+      "refused": false,
+      "refused_by": null,
+      "pages": [
+        1
+      ],
+      "latency_s": 10.68,
+      "answer": "وزن الطفلة هو 26 كغ. [Page 1]",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": ""
+      },
+      "top_score": 0.0365,
+      "hit": true,
+      "correct": true
+    },
+    {
+      "collection": "dossier_mansour_lina",
+      "question": "qelle est la dose de valproat ?",
+      "in_scope": true,
+      "expected_page": 2,
+      "expected_terms": [
+        "300"
+      ],
+      "refused": false,
+      "refused_by": null,
+      "pages": [
+        2
+      ],
+      "latency_s": 53.27,
+      "answer": "La dose est de 300 mg deux fois par jour. [Page 2]",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": ""
+      },
+      "top_score": 0.2857,
+      "hit": true,
+      "correct": true
+    },
+    {
+      "collection": "dossier_mansour_lina",
+      "question": "En quelle année l'épilepsie a-t-elle été diagnostiquée ?",
+      "in_scope": true,
+      "expected_page": 1,
+      "expected_terms": [
+        "2025"
+      ],
+      "refused": false,
+      "refused_by": null,
+      "pages": [
+        1
+      ],
+      "latency_s": 20.01,
+      "answer": "L’épilepsie a été diagnostiquée en 2025. [Page 1]",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": ""
+      },
+      "top_score": 0.6755,
+      "hit": true,
+      "correct": true
+    },
+    {
+      "collection": "dossier_ben_amor_hedi",
+      "question": "Quel est le résultat de sa spirométrie ?",
+      "in_scope": false,
+      "refused": true,
+      "refused_by": "gate",
+      "pages": [],
+      "latency_s": 1.73,
+      "answer": "Information non trouvée dans les documents fournis.",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": "refused by relevance gate"
+      },
+      "top_score": 0.0002
+    },
+    {
+      "collection": "dossier_ben_amor_hedi",
+      "question": "Quelle est la météo à Tunis demain ?",
+      "in_scope": false,
+      "refused": true,
+      "refused_by": "gate",
+      "pages": [],
+      "latency_s": 1.44,
+      "answer": "Information non trouvée dans les documents fournis.",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": "refused by relevance gate"
+      },
+      "top_score": 0.0
+    },
+    {
+      "collection": "dossier_gharbi_salma",
+      "question": "Quelle est sa créatinine ?",
+      "in_scope": false,
+      "refused": true,
+      "refused_by": "gate",
+      "pages": [],
+      "latency_s": 8.62,
+      "answer": "Information non trouvée dans les documents fournis.",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": "refused by relevance gate"
+      },
+      "top_score": 0.0002
+    },
+    {
+      "collection": "dossier_gharbi_salma",
+      "question": "Écris-moi un poème sur la mer.",
+      "in_scope": false,
+      "refused": true,
+      "refused_by": "gate",
+      "pages": [],
+      "latency_s": 3.48,
+      "answer": "Information non trouvée dans les documents fournis.",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": "refused by relevance gate"
+      },
+      "top_score": 0.0
+    },
+    {
+      "collection": "dossier_trabelsi_youssef",
+      "question": "Quel est son traitement contre l'asthme ?",
+      "in_scope": false,
+      "refused": true,
+      "refused_by": "gate",
+      "pages": [],
+      "latency_s": 2.85,
+      "answer": "Information non trouvée dans les documents fournis.",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": "refused by relevance gate"
+      },
+      "top_score": 0.0032
+    },
+    {
+      "collection": "dossier_trabelsi_youssef",
+      "question": "How do I reset my password?",
+      "in_scope": false,
+      "refused": true,
+      "refused_by": "gate",
+      "pages": [],
+      "latency_s": 4.41,
+      "answer": "Information non trouvée dans les documents fournis.",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": "refused by relevance gate"
+      },
+      "top_score": 0.0
+    },
+    {
+      "collection": "dossier_mansour_lina",
+      "question": "Quelle est sa dernière HbA1c ?",
+      "in_scope": false,
+      "refused": true,
+      "refused_by": "gate",
+      "pages": [],
+      "latency_s": 4.91,
+      "answer": "Information non trouvée dans les documents fournis.",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": "refused by relevance gate"
+      },
+      "top_score": 0.001
+    },
+    {
+      "collection": "dossier_mansour_lina",
+      "question": "ما هي عاصمة فرنسا؟",
+      "in_scope": false,
+      "refused": true,
+      "refused_by": "gate",
+      "pages": [],
+      "latency_s": 10.18,
+      "answer": "Information non trouvée dans les documents fournis.",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": "refused by relevance gate"
+      },
+      "top_score": 0.0
+    }
+  ]
+}

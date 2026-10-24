@@ -1,0 +1,152 @@
+[
+  {
+    "collection": "dossier_ben_amor_hedi",
+    "question": "Quel est son groupe sanguin ?",
+    "in_scope": true,
+    "expected_page": 1,
+    "expected_terms": [
+      [
+        "A positif",
+        "A+"
+      ]
+    ]
+  },
+  {
+    "collection": "dossier_ben_amor_hedi",
+    "question": "En quelle année a-t-il fait un accident ischémique transitoire ?",
+    "in_scope": true,
+    "expected_page": 1,
+    "expected_terms": [
+      "2021"
+    ]
+  },
+  {
+    "collection": "dossier_ben_amor_hedi",
+    "question": "Quel bêtabloquant prend-il ?",
+    "in_scope": true,
+    "expected_page": 2,
+    "expected_terms": [
+      "bisoprolol"
+    ]
+  },
+  {
+    "collection": "dossier_gharbi_salma",
+    "question": "Quel est le groupe sanguin de la patiente ?",
+    "in_scope": true,
+    "expected_page": 1,
+    "expected_terms": [
+      [
+        "négatif",
+        "O-",
+        "O−"
+      ]
+    ]
+  },
+  {
+    "collection": "dossier_gharbi_salma",
+    "question": "De combien de semaines est la grossesse ?",
+    "in_scope": true,
+    "expected_page": 4,
+    "expected_terms": [
+      "20"
+    ]
+  },
+  {
+    "collection": "dossier_gharbi_salma",
+    "question": "À quelle date la spirométrie a-t-elle été faite ?",
+    "in_scope": true,
+    "expected_page": 3,
+    "expected_terms": [
+      [
+        "3 juin",
+        "03/06",
+        "3/06"
+      ]
+    ]
+  },
+  {
+    "collection": "dossier_trabelsi_youssef",
+    "question": "Quel est son débit de filtration ?",
+    "in_scope": true,
+    "expected_page": 3,
+    "expected_terms": [
+      "68"
+    ]
+  },
+  {
+    "collection": "dossier_trabelsi_youssef",
+    "question": "Which statin does he take?",
+    "in_scope": true,
+    "expected_page": 2,
+    "expected_terms": [
+      "atorvastatin"
+    ]
+  },
+  {
+    "collection": "dossier_mansour_lina",
+    "question": "ما هو وزن الطفلة؟",
+    "in_scope": true,
+    "expected_page": 1,
+    "expected_terms": [
+      "26"
+    ]
+  },
+  {
+    "collection": "dossier_mansour_lina",
+    "question": "qelle est la dose de valproat ?",
+    "in_scope": true,
+    "expected_page": 2,
+    "expected_terms": [
+      "300"
+    ]
+  },
+  {
+    "collection": "dossier_mansour_lina",
+    "question": "En quelle année l'épilepsie a-t-elle été diagnostiquée ?",
+    "in_scope": true,
+    "expected_page": 1,
+    "expected_terms": [
+      "2025"
+    ]
+  },
+  {
+    "collection": "dossier_ben_amor_hedi",
+    "question": "Quel est le résultat de sa spirométrie ?",
+    "in_scope": false
+  },
+  {
+    "collection": "dossier_ben_amor_hedi",
+    "question": "Quelle est la météo à Tunis demain ?",
+    "in_scope": false
+  },
+  {
+    "collection": "dossier_gharbi_salma",
+    "question": "Quelle est sa créatinine ?",
+    "in_scope": false
+  },
+  {
+    "collection": "dossier_gharbi_salma",
+    "question": "Écris-moi un poème sur la mer.",
+    "in_scope": false
+  },
+  {
+    "collection": "dossier_trabelsi_youssef",
+    "question": "Quel est son traitement contre l'asthme ?",
+    "in_scope": false
+  },
+  {
+    "collection": "dossier_trabelsi_youssef",
+    "question": "How do I reset my password?",
+    "in_scope": false
+  },
+  {
+    "collection": "dossier_mansour_lina",
+    "question": "Quelle est sa dernière HbA1c ?",
+    "in_scope": false
+  },
+  {
+    "collection": "dossier_mansour_lina",
+    "question": "ما هي عاصمة فرنسا؟",
+    "in_scope": false
+  }
+]
