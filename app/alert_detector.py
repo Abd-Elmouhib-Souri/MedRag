@@ -59,7 +59,7 @@ ALERT_PATTERNS = {
         "keywords": [
             "surveillance", "surveiller", "monitoring", "contrôle",
             "suivi rapproché", "bilan", "créatinine", "glycémie",
-            "INR", "TP", "NFS", "ionogramme", "fonction rénale",
+            "INR", "taux de prothrombine", "NFS", "ionogramme", "fonction rénale",
             "insuffisance rénale", "hépatique",
         ],
         "icon": "👁️"
@@ -115,46 +115,60 @@ def _upgrade_level(current: str, new: str) -> str:
     return new if SEVERITY_ORDER.index(new) > SEVERITY_ORDER.index(current) else current
 
 
+# Negation cues: "pas d'allergie", "aucune interaction", "no known allergy"...
+# A keyword preceded by one of these in the same sentence (within ~40
+# characters) is ignored, so a documented ABSENCE does not raise an alert.
+NEGATION_RE = re.compile(
+    r"\b(pas\s+d[e']|pas|aucun(e|s)?|sans|absence\s+d[e']|ni|non|jamais|n[ée]gati(f|ve)|"
+    r"no|not|without|denies|denied|negative\s+for)\b[^.;\n]{0,40}$",
+    re.IGNORECASE,
+)
+SENTENCE_SPLIT_RE = re.compile(r"(?<=[.!?;\n])\s+")
+
+
+def _keyword_regex(keyword: str) -> re.Pattern:
+    """Whole-word match: 'TP' must not match inside 'http', 'bilan' inside 'bilans' is fine."""
+    return re.compile(r"(?<!\w)" + re.escape(keyword.lower()) + r"(?!\w)")
+
+
+def _affirmed(keyword: str, sentences: list[str]) -> bool:
+    """True if the keyword appears at least once WITHOUT a negation just before it."""
+    pattern = _keyword_regex(keyword)
+    for sentence in sentences:
+        for match in pattern.finditer(sentence):
+            if not NEGATION_RE.search(sentence[: match.start()]):
+                return True
+    return False
+
+
 def detect_alerts(answer: str, context: str = "") -> AlertResult:
     """
-    Analyse la réponse du LLM (+ contexte source) et retourne un AlertResult.
+    Analyse the LLM answer (+ source context) and return an AlertResult.
 
-    Args:
-        answer  : texte de la réponse générée par le LLM
-        context : texte brut des chunks sources (optionnel, enrichit la détection)
-
-    Returns:
-        AlertResult avec tous les détails des alertes trouvées
+    Matching is whole-word and negation-aware: "Allergie : pénicilline" raises
+    an ALLERGIE alert, "Aucune allergie connue" does not.
     """
-    result  = AlertResult()
-    full_text = (answer + " " + context).lower()
+    result = AlertResult()
+    full_text = (answer + "\n" + context).lower()
+    sentences = [s for s in SENTENCE_SPLIT_RE.split(full_text) if s.strip()]
 
-    # 1. Détection par catégorie de patterns
-    for category, config in ALERT_PATTERNS.items():
-        found_keywords = [kw for kw in config["keywords"] if kw.lower() in full_text]
-        if found_keywords:
+    # 1. Pattern categories
+    for category, cfg in ALERT_PATTERNS.items():
+        found = [kw for kw in cfg["keywords"] if _affirmed(kw, sentences)]
+        if found:
             result.has_alert = True
             result.categories.append(category)
-            result.level = _upgrade_level(result.level, config["level"])
+            result.level = _upgrade_level(result.level, cfg["level"])
+            result.alerts.append(f"{cfg['icon']} {category.replace('_', ' ')} — terme détecté : « {found[0]} »")
 
-            # Construire un message d'alerte lisible
-            sample = found_keywords[0]
-            alert_msg = f"{config['icon']} {category.replace('_', ' ')} — terme détecté : « {sample} »"
-            result.alerts.append(alert_msg)
-
-    # 2. Détection médicaments à haut risque
-    for drug in HIGH_RISK_DRUGS:
-        if drug.lower() in full_text:
-            result.high_risk_drugs_found.append(drug)
-
+    # 2. High-risk drugs (a drug name is a fact, so negation also applies: "pas de warfarine")
+    result.high_risk_drugs_found = [d for d in HIGH_RISK_DRUGS if _affirmed(d, sentences)]
     if result.high_risk_drugs_found:
         result.has_alert = True
         result.level = _upgrade_level(result.level, "ATTENTION")
-        drugs_str = ", ".join(result.high_risk_drugs_found[:3])
-        result.alerts.append(f"💊 MÉDICAMENT À RISQUE — surveillance requise : {drugs_str}")
+        drugs = ", ".join(result.high_risk_drugs_found[:3])
+        result.alerts.append(f"💊 MÉDICAMENT À RISQUE — surveillance requise : {drugs}")
 
-    # 3. Si aucune alerte → niveau AUCUNE
     if not result.has_alert:
         result.level = "AUCUNE"
-
     return result
