@@ -5,7 +5,7 @@ Thème : Blanc + Bleu ciel + Rouge + Jaune — Médical propre et professionnel
 
 import streamlit as st
 import requests
-import tempfile
+import html
 import os
 from datetime import datetime
 
@@ -311,6 +311,12 @@ if not st.session_state.summaries_cache:
 
 
 # ─── Helper : alertes ─────────────────────────────────────────────────────────
+def _short(text, limit: int) -> str:
+    """HTML-escaped text, cut with an ellipsis (the full text stays in the tooltip)."""
+    text = str(text)
+    return html.escape(text if len(text) <= limit else text[: limit - 1] + "…")
+
+
 def render_alert(alert: dict):
     if not alert or not alert.get("has_alert"):
         return
@@ -332,7 +338,7 @@ def render_alert(alert: dict):
         "ATTENTION": "#ddaa00"
     }.get(level, "#ddaa00")
 
-    items_html = "".join([f'<div class="alert-item">• {a}</div>' for a in alerts])
+    items_html = "".join([f'<div class="alert-item">• {html.escape(str(a))}</div>' for a in alerts])
     st.markdown(f"""
     <div class="alert-bloc {level_css}">
         <div class="alert-header" style="color:{level_color}">⚠ ALERTE {level}</div>
@@ -341,11 +347,30 @@ def render_alert(alert: dict):
     """, unsafe_allow_html=True)
 
     if drugs:
-        drugs_str = "  ·  ".join(drugs[:4])
+        drugs_str = html.escape("  ·  ".join(str(d) for d in drugs[:4]))
         st.markdown(f'<div class="drug-alert-banner">💊 Surveillance renforcée requise : <strong>{drugs_str}</strong></div>', unsafe_allow_html=True)
 
 
 # ─── Helper : fiche patient ───────────────────────────────────────────────────
+def render_trust_badges(message: dict):
+    """Show the relevance gate and groundedness results under an answer."""
+    badges = []
+    if message.get("refused"):
+        badges.append("🛑 Aucune source assez pertinente : réponse refusée (pas d'hallucination)")
+    g = message.get("grounding") or {}
+    if g.get("checked") and g.get("grounded") is True and not message.get("refused"):
+        badges.append("✅ Réponse vérifiée : chaque phrase est appuyée par les sources")
+    elif g.get("checked") and g.get("grounded") is False:
+        unsupported = "".join(f"<br>• {html.escape(u)}" for u in g.get("unsupported", [])[:3])
+        badges.append(f"⚠️ Phrases non appuyées par les sources (score {g.get('score', 0):.2f}) :{unsupported}")
+    t = (message.get("timings_ms") or {}).get("total")
+    if t:
+        badges.append(f"⏱ {t / 1000:.1f} s")
+    if badges:
+        st.markdown('<div style="font-size:11px;color:#446;margin:4px 0 8px">' + " · ".join(badges) + "</div>",
+                    unsafe_allow_html=True)
+
+
 def render_patient_card(collection_name: str):
     summary = st.session_state.summaries_cache.get(collection_name)
     if not summary:
@@ -357,20 +382,22 @@ def render_patient_card(collection_name: str):
         st.markdown('<div style="padding:4px 16px;font-size:11px;color:#aabbd0;font-weight:500;">Fiche non disponible — réindexez le PDF</div>', unsafe_allow_html=True)
         return
 
-    diag   = summary.get("diagnostic_principal", "—")[:45]
-    age    = summary.get("age", "—")
+    # Every field below is LLM output from the uploaded PDF: escape it before rendering as HTML.
+    diag   = _short(summary.get("diagnostic_principal", "—"), 45)
+    age    = html.escape(str(summary.get("age", "—")))
     drugs  = summary.get("medicaments_actifs", [])
     allerg = summary.get("allergies", [])
-    nom    = summary.get("nom_patient", collection_name.replace("_"," ").title())
+    nom    = html.escape(str(summary.get("nom_patient", collection_name.replace("_"," ").title())))
 
     HIGH_RISK = ["warfar","héparin","morphin","insuline","lithium","metformin","digoxin","amiodar","valproat"]
     drugs_html  = "".join([
-        f'<span class="drug-tag-alert">{d[:22]}</span>'
-        if any(hr in d.lower() for hr in HIGH_RISK)
-        else f'<span class="drug-tag">{d[:22]}</span>'
+        f'<span class="drug-tag-alert" title="{html.escape(str(d))}">{_short(d, 28)}</span>'
+        if any(hr in str(d).lower() for hr in HIGH_RISK)
+        else f'<span class="drug-tag" title="{html.escape(str(d))}">{_short(d, 28)}</span>'
         for d in drugs[:6]
     ])
-    allerg_html = "".join([f'<span class="drug-tag-alert">{a[:22]}</span>' for a in allerg[:3]])
+    allerg_html = "".join([f'<span class="drug-tag-alert" title="{html.escape(str(a))}">{_short(a, 28)}</span>'
+                           for a in allerg[:3]])
 
     st.markdown(f"""
     <div class="patient-card">
@@ -401,7 +428,7 @@ with st.sidebar:
         <div class="logo-sub">Clinical Document Intelligence </div>
         <div class="status-row">
             <div class="dot-green"></div>
-            Connecté · ChromaDB · llama3 · Alertes ON
+            Connecté · ChromaDB + BM25 · bge-reranker · gpt-oss · Alertes ON
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -503,20 +530,18 @@ with st.sidebar:
     if uploaded_file is not None:
         col1, col2 = st.columns([3,1])
         with col1:
-            st.markdown(f'<div style="font-size:11px;color:#5599cc;padding:4px 0;font-weight:500">{uploaded_file.name}</div>', unsafe_allow_html=True)
+            st.markdown(f'<div style="font-size:11px;color:#5599cc;padding:4px 0;font-weight:500">{html.escape(uploaded_file.name)}</div>', unsafe_allow_html=True)
         with col2:
             if st.button("Indexer", key="btn_ingest"):
                 with st.spinner("Indexation + fiche patient..."):
                     try:
-                        with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
-                            tmp.write(uploaded_file.getvalue())
-                            tmp_path = tmp.name
+                        # Real multipart upload: works even when the API runs on another machine
                         response = requests.post(
                             f"{API_URL}/ingest",
-                            json={"file_path": tmp_path, "collection_name": uploaded_file.name},
-                            timeout=180
+                            files={"file": (uploaded_file.name, uploaded_file.getvalue(), "application/pdf")},
+                            data={"collection_name": uploaded_file.name},
+                            timeout=300
                         )
-                        os.unlink(tmp_path)
                         if response.status_code == 200:
                             data         = response.json()
                             returned_col = data.get("collection_name", uploaded_file.name)
@@ -527,7 +552,10 @@ with st.sidebar:
                             st.session_state.alert_count           = 0
                             if data.get("summary"):
                                 st.session_state.summaries_cache[returned_col] = data["summary"]
+                            susp = data.get("suspicious_chunks", 0)
                             st.success(f"✅ {data.get('chunks_indexed','?')} chunks · Fiche générée")
+                            if susp:
+                                st.warning(f"🛡️ {susp} passage(s) suspect(s) (injection de prompt) mis en quarantaine")
                             st.rerun()
                         else:
                             st.error(f"❌ {response.text[:120]}")
@@ -621,7 +649,7 @@ if not st.session_state.messages:
 # Historique des messages
 for message in st.session_state.messages:
     if message["role"] == "user":
-        st.markdown(f'<div class="bubble-user">{message["content"]}</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="bubble-user">{html.escape(message["content"])}</div>', unsafe_allow_html=True)
     elif message["role"] == "assistant":
         answer  = message.get("content", "")
         sources = message.get("sources", [])
@@ -636,7 +664,8 @@ for message in st.session_state.messages:
                 'text-transform:uppercase;letter-spacing:0.8px">🔀 Analyse comparative</div>',
                 unsafe_allow_html=True
             )
-        st.markdown(f'<div class="{bubble_class}">{answer}</div>', unsafe_allow_html=True)
+        safe_answer = html.escape(answer).replace("\n", "<br>")  # never render model output as raw HTML
+        st.markdown(f'<div class="{bubble_class}">{safe_answer}</div>', unsafe_allow_html=True)
 
         if mode == "compare" and per_pat:
             for pat_name, pat_data in per_pat.items():
@@ -648,14 +677,19 @@ for message in st.session_state.messages:
                                 f'<div style="font-size:11px;color:#336699;margin-bottom:4px;'
                                 f'padding:6px 10px;background:#f5faff;border-radius:6px;'
                                 f'border:1px solid #cce4f5">'
-                                f'<strong>Page {s.get("page","?")}</strong> · {s.get("content","")[:160]}...</div>',
+                                f'<strong>Page {html.escape(str(s.get("page","?")))}</strong> · '
+                                f'{html.escape(s.get("content","")[:160])}...</div>',
                                 unsafe_allow_html=True
                             )
 
         render_alert(alert)
+        render_trust_badges(message)
 
         if mode == "single" and sources:
-            tags_html = "".join([f'<span class="source-tag">Page {s.get("page","?")} · Contexte</span>' for s in sources[:4]])
+            tags_html = "".join([
+                f'<span class="source-tag">Page {html.escape(str(s.get("page","?")))}'
+                + (f' · pertinence {s["score"]:.2f}' if s.get("score") is not None else ' · Contexte')
+                + '</span>' for s in sources[:4]])
             st.markdown(f'<div class="sources-row">{tags_html}</div>', unsafe_allow_html=True)
             with st.expander("Sources documentaires consultées"):
                 for s in sources:
@@ -663,7 +697,8 @@ for message in st.session_state.messages:
                         f'<div style="font-size:11px;color:#336699;margin-bottom:5px;'
                         f'padding:7px 10px;background:#f5faff;border-radius:6px;'
                         f'border:1px solid #cce4f5">'
-                        f'<strong>Page {s.get("page","?")}</strong> · {s.get("content","")[:200]}...</div>',
+                        f'<strong>Page {html.escape(str(s.get("page","?")))}</strong> · '
+                        f'{html.escape(s.get("content","")[:200])}...</div>',
                         unsafe_allow_html=True
                     )
 
@@ -685,7 +720,7 @@ if prompt := st.chat_input(placeholder):
         st.stop()
 
     st.session_state.messages.append({"role": "user", "content": prompt})
-    st.markdown(f'<div class="bubble-user">{prompt}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="bubble-user">{html.escape(prompt)}</div>', unsafe_allow_html=True)
 
     with st.spinner("Analyse en cours..."):
         try:
@@ -693,7 +728,7 @@ if prompt := st.chat_input(placeholder):
                 res = requests.post(
                     f"{API_URL}/ask",
                     json={"question": prompt, "collection_name": st.session_state.active_collection},
-                    timeout=60
+                    timeout=180  # CPU reranker + Groq retries can be slow
                 )
                 if res.status_code != 200:
                     st.error(f"❌ Erreur {res.status_code} : {res.text[:200]}")
@@ -706,13 +741,15 @@ if prompt := st.chat_input(placeholder):
                     st.session_state.alert_count += 1
                 st.session_state.messages.append({
                     "role":"assistant","content":answer,
-                    "sources":sources,"alert":alert,"mode":"single"
+                    "sources":sources,"alert":alert,"mode":"single",
+                    "grounding":data.get("grounding"),"refused":data.get("refused", False),
+                    "retrieval":data.get("retrieval"),"timings_ms":data.get("timings_ms", {})
                 })
             else:
                 res = requests.post(
                     f"{API_URL}/compare",
                     json={"question": prompt, "collection_names": st.session_state.compare_collections},
-                    timeout=120
+                    timeout=300  # one gated retrieval per patient
                 )
                 if res.status_code != 200:
                     st.error(f"❌ Erreur {res.status_code} : {res.text[:200]}")
@@ -730,7 +767,8 @@ if prompt := st.chat_input(placeholder):
                 st.session_state.messages.append({
                     "role":"assistant","content":answer,
                     "sources":[],"alert":alert,
-                    "mode":"compare","per_patient":per_pat
+                    "mode":"compare","per_patient":per_pat,
+                    "grounding":data.get("grounding"),"refused":data.get("refused", False)
                 })
             st.rerun()
 
