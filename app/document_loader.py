@@ -1,5 +1,7 @@
-import fitz  # PyMuPDF — pour lire les PDFs
+import pymupdf  # PyMuPDF (the old "fitz" import name is deprecated)
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+
+from app import config
 import re
 
 # Ces patterns détectent les informations médicales importantes
@@ -17,7 +19,7 @@ def load_pdf(file_path: str) -> list[dict]:
     """
     Ouvre un PDF et extrait le texte de chaque page.
     """
-    doc = fitz.open(file_path)
+    doc = pymupdf.open(file_path)
     pages = []
 
     for page_num, page in enumerate(doc):
@@ -39,8 +41,8 @@ def split_text_with_metadata(pages: list[dict]) -> list[dict]:
     Découpe chaque page en petits morceaux (chunks) de 600 caractères.
     """
     splitter = RecursiveCharacterTextSplitter(
-        chunk_size=600,
-        chunk_overlap=80,
+        chunk_size=config.CHUNK_SIZE,
+        chunk_overlap=config.CHUNK_OVERLAP,
         separators=["\n\n", "\n", ". ", " "]
     )
 

@@ -1,43 +1,34 @@
-# requirements.txt — MedRAG v2
-# LangChain 1.3.x — synchronisé avec l'environnement conda (medrag)
-# Commande d'installation : pip install -r requirements.txt
+# requirements.txt — MedRAG v3
+# Every version is pinned and was installed and tested on Windows 11, Python 3.11.17 (Oct 2026).
 
-# ── LangChain core ────────────────────────────────────────────────────────────
-langchain>=1.3.0
-langchain-community>=0.3.0
-langchain-core>=0.3.0
-langchain-groq>=0.2.0
-langchain-huggingface>=0.1.0
-langchain-chroma>=0.1.0
-langchain-text-splitters>=0.3.0
+# ── LangChain ────────────────────────────────────────────────────────────────
+langchain-core==1.7.0            # tested
+langchain-community==0.4.2       # tested (BM25Retriever)
+langchain-groq==1.1.3            # tested
+langchain-chroma==1.1.0          # tested
+langchain-huggingface==1.2.3     # tested
+langchain-text-splitters==1.1.3  # tested
 
-# ── Vector store ──────────────────────────────────────────────────────────────
-chromadb>=0.5.0
+# ── Retrieval ────────────────────────────────────────────────────────────────
+chromadb==1.5.9                  # tested
+rank_bm25==0.2.2                 # tested
+flashrank==0.2.10                # optional backend (rejected in evaluation, kept for comparison)
+sentence-transformers==6.2.0     # tested (embeddings + bge cross-encoder)
+torch==2.14.1                    # tested (CPU build on Windows; Linux pip may fetch a large CUDA build)
 
-# ── Embeddings ────────────────────────────────────────────────────────────────
-sentence-transformers>=3.0.0
+# ── PDF ──────────────────────────────────────────────────────────────────────
+PyMuPDF==2.0              # tested
+reportlab==5.1.0           # tested
 
-# ── PDF ───────────────────────────────────────────────────────────────────────
-PyMuPDF>=1.24.0
-reportlab>=4.1.0
+# ── API & UI ─────────────────────────────────────────────────────────────────
+fastapi==0.161.0                 # tested
+uvicorn==0.54.0                  # tested
+python-multipart==0.0.32         # tested (file uploads)
+python-dotenv==1.2.4             # tested
+pydantic==2.14.1                 # tested
+requests==2.34.2                 # tested
+streamlit==1.66.1                # tested
 
-# ── API & serveur ─────────────────────────────────────────────────────────────
-fastapi>=0.111.0
-uvicorn>=0.29.0
-python-multipart>=0.0.9
-python-dotenv>=1.0.1
-aiofiles>=23.2.1
-
-# ── Frontend ──────────────────────────────────────────────────────────────────
-streamlit>=1.35.0
-
-# ── LLM ───────────────────────────────────────────────────────────────────────
-groq>=0.9.0
-
-# ── Retrieval ─────────────────────────────────────────────────────────────────
-rank_bm25>=0.2.2
-
-# ── Utilitaires ───────────────────────────────────────────────────────────────
-pydantic>=2.7.0
-httpx>=0.27.0
-pytest>=8.2.0
+# ── Tests ────────────────────────────────────────────────────────────────────
+pytest==9.1.1                    # tested
+httpx==0.28.1                    # tested (FastAPI TestClient)

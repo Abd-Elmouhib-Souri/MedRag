@@ -26,9 +26,14 @@ import json
 from pathlib import Path
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
-from langchain_groq import ChatGroq
+import logging
 
-SUMMARIES_DIR = os.getenv("SUMMARIES_DIR", "./data/summaries")
+from app import config
+from app.llm_chain import get_llm
+
+log = logging.getLogger(__name__)
+
+SUMMARIES_DIR = config.SUMMARIES_DIR
 
 # Prompt très directif — force le JSON pur sans texte parasite
 FICHE_PROMPT = """Analyse ce dossier médical et extrais les informations dans le JSON ci-dessous.
@@ -75,11 +80,7 @@ def generate_patient_summary(collection_name: str, chunks: list) -> dict:
     # Prendre les 15 premiers chunks pour couvrir l'en-tête du dossier
     sample_text = "\n\n".join([c["text"] for c in chunks[:15]])
 
-    llm = ChatGroq(
-        model_name="llama-3.3-70b-versatile",
-        temperature=0,
-        max_tokens=1024
-    )
+    llm = get_llm("strong")  # shared factory: same model, timeout and retries everywhere
 
     MAX_RETRIES = 3
     last_error  = None
@@ -117,18 +118,18 @@ def generate_patient_summary(collection_name: str, chunks: list) -> dict:
             with open(path, "w", encoding="utf-8") as f:
                 json.dump(summary, f, ensure_ascii=False, indent=2)
 
-            print(f"[OK] Fiche patient generee (tentative {attempt + 1}/{MAX_RETRIES}) : {path}")
+            log.info(f"Fiche patient generee (tentative {attempt + 1}/{MAX_RETRIES}) : {path}")
             return summary
 
         except json.JSONDecodeError as e:
             last_error = f"JSONDecodeError : {str(e)}"
-            print(f"[WARN] Tentative {attempt + 1}/{MAX_RETRIES} - JSON invalide : {last_error[:80]}")
+            log.warning(f"Tentative {attempt + 1}/{MAX_RETRIES} - JSON invalide : {last_error[:80]}")
         except Exception as e:
             last_error = str(e)
-            print(f"[WARN] Tentative {attempt + 1}/{MAX_RETRIES} echouee : {last_error[:80]}")
+            log.warning(f"Tentative {attempt + 1}/{MAX_RETRIES} echouee : {last_error[:80]}")
 
     # ── Fallback après 3 échecs ────────────────────────────────────────────────
-    print(f"[WARN] Fiche patient non generee apres {MAX_RETRIES} tentatives - mode fallback")
+    log.warning(f"Fiche patient non generee apres {MAX_RETRIES} tentatives - mode fallback")
 
     fallback = {
         "collection_name":         collection_name,
