@@ -1,0 +1,135 @@
+[
+  {
+    "collection": "dossier_ben_amor_hedi",
+    "question": "Prend-il un antivitamine K ? Lequel ?",
+    "in_scope": true,
+    "expected_page": 2,
+    "expected_terms": [
+      "warfarine"
+    ]
+  },
+  {
+    "collection": "dossier_ben_amor_hedi",
+    "question": "ما هو الدواء المضاد للتخثر الذي يتناوله؟",
+    "in_scope": true,
+    "expected_page": 2,
+    "expected_terms": [
+      [
+        "warfarine",
+        "warfarin",
+        "وارفارين"
+      ]
+    ]
+  },
+  {
+    "collection": "dossier_gharbi_salma",
+    "question": "Quel corticoïde inhalé utilise-t-elle ?",
+    "in_scope": true,
+    "expected_page": 2,
+    "expected_terms": [
+      "budésonide"
+    ]
+  },
+  {
+    "collection": "dossier_gharbi_salma",
+    "question": "Quel bronchodilatateur d'action rapide a-t-elle en cas de crise ?",
+    "in_scope": true,
+    "expected_page": 2,
+    "expected_terms": [
+      "salbutamol"
+    ]
+  },
+  {
+    "collection": "dossier_gharbi_salma",
+    "question": "Quel bêta-2 agoniste de longue durée d'action reçoit-elle ?",
+    "in_scope": true,
+    "expected_page": 2,
+    "expected_terms": [
+      "formotérol"
+    ]
+  },
+  {
+    "collection": "dossier_trabelsi_youssef",
+    "question": "Quel IEC prend-il ?",
+    "in_scope": true,
+    "expected_page": 2,
+    "expected_terms": [
+      "ramipril"
+    ]
+  },
+  {
+    "collection": "dossier_trabelsi_youssef",
+    "question": "Which ACE inhibitor is he taking?",
+    "in_scope": true,
+    "expected_page": 2,
+    "expected_terms": [
+      "ramipril"
+    ]
+  },
+  {
+    "collection": "dossier_trabelsi_youssef",
+    "question": "Quelle est la dose de son biguanide ?",
+    "in_scope": true,
+    "expected_page": 2,
+    "expected_terms": [
+      "1000"
+    ]
+  },
+  {
+    "collection": "dossier_trabelsi_youssef",
+    "question": "Quelle gliptine a été ajoutée à son traitement ?",
+    "in_scope": true,
+    "expected_page": 3,
+    "expected_terms": [
+      "sitagliptine"
+    ]
+  },
+  {
+    "collection": "dossier_trabelsi_youssef",
+    "question": "Quel inhibiteur de la DPP-4 lui a été prescrit ?",
+    "in_scope": true,
+    "expected_page": 3,
+    "expected_terms": [
+      "sitagliptine"
+    ]
+  },
+  {
+    "collection": "dossier_mansour_lina",
+    "question": "Quelle est la posologie de son anticonvulsivant ?",
+    "in_scope": true,
+    "expected_page": 2,
+    "expected_terms": [
+      "300"
+    ]
+  },
+  {
+    "collection": "dossier_gharbi_salma",
+    "question": "Quel anticoagulant prend-elle ?",
+    "in_scope": false
+  },
+  {
+    "collection": "dossier_mansour_lina",
+    "question": "Quelle statine prend l'enfant ?",
+    "in_scope": false
+  },
+  {
+    "collection": "dossier_ben_amor_hedi",
+    "question": "Quel IEC prend-il ?",
+    "in_scope": false
+  },
+  {
+    "collection": "dossier_trabelsi_youssef",
+    "question": "Quel bêtabloquant prend-il ?",
+    "in_scope": false
+  },
+  {
+    "collection": "dossier_gharbi_salma",
+    "question": "Quel antidiabétique prend-elle ?",
+    "in_scope": false
+  },
+  {
+    "collection": "dossier_mansour_lina",
+    "question": "Which beta blocker is she taking?",
+    "in_scope": false
+  }
+]

@@ -151,6 +151,37 @@ TEST_OUT_OF_SCOPE = [
 ]
 
 
+# ── DEV set for the drug-CLASS fix (questions_dev_classes.json) ───────────────
+# Written and committed BEFORE app/drug_classes.py existed, so the fix could not be
+# tuned on them. They name a drug CLASS instead of the molecule. Facts already used
+# by the TEST set (bisoprolol, atorvastatine) are deliberately NOT asked here.
+# Unanswerable ones name a class the patient does NOT take: the expansion must not
+# turn them into answers.
+DEV_CLASS_IN_SCOPE = [
+    ("dossier_ben_amor_hedi", "Prend-il un antivitamine K ? Lequel ?", 2, ["warfarine"]),
+    ("dossier_ben_amor_hedi", "ما هو الدواء المضاد للتخثر الذي يتناوله؟", 2,               # Arabic
+     [["warfarine", "warfarin", "وارفارين"]]),
+    ("dossier_gharbi_salma", "Quel corticoïde inhalé utilise-t-elle ?", 2, ["budésonide"]),
+    ("dossier_gharbi_salma", "Quel bronchodilatateur d'action rapide a-t-elle en cas de crise ?", 2, ["salbutamol"]),
+    ("dossier_gharbi_salma", "Quel bêta-2 agoniste de longue durée d'action reçoit-elle ?", 2, ["formotérol"]),
+    ("dossier_trabelsi_youssef", "Quel IEC prend-il ?", 2, ["ramipril"]),
+    ("dossier_trabelsi_youssef", "Which ACE inhibitor is he taking?", 2, ["ramipril"]),     # English
+    ("dossier_trabelsi_youssef", "Quelle est la dose de son biguanide ?", 2, ["1000"]),
+    ("dossier_trabelsi_youssef", "Quelle gliptine a été ajoutée à son traitement ?", 3, ["sitagliptine"]),
+    ("dossier_trabelsi_youssef", "Quel inhibiteur de la DPP-4 lui a été prescrit ?", 3, ["sitagliptine"]),
+    ("dossier_mansour_lina", "Quelle est la posologie de son anticonvulsivant ?", 2, ["300"]),
+]
+
+DEV_CLASS_OUT_OF_SCOPE = [
+    ("dossier_gharbi_salma", "Quel anticoagulant prend-elle ?"),        # no anticoagulant in her record
+    ("dossier_mansour_lina", "Quelle statine prend l'enfant ?"),
+    ("dossier_ben_amor_hedi", "Quel IEC prend-il ?"),                   # he takes warfarine + bisoprolol only
+    ("dossier_trabelsi_youssef", "Quel bêtabloquant prend-il ?"),       # he takes ramipril, not a beta-blocker
+    ("dossier_gharbi_salma", "Quel antidiabétique prend-elle ?"),
+    ("dossier_mansour_lina", "Which beta blocker is she taking?"),
+]
+
+
 def _as_records(in_scope: list, out_of_scope: list) -> list[dict]:
     """Question tuples -> the JSON records read by scripts/evaluate.py."""
     return ([{"collection": c, "question": q, "in_scope": True, "expected_page": p, "expected_terms": t}
@@ -175,7 +206,9 @@ def main() -> None:
     for name, pages in RECORDS.items():
         write_pdf(CORPUS / f"{name}.pdf", pages)
     for filename, questions in (("questions.json", _as_records(IN_SCOPE, OUT_OF_SCOPE)),
-                                ("questions_test.json", _as_records(TEST_IN_SCOPE, TEST_OUT_OF_SCOPE))):
+                                ("questions_test.json", _as_records(TEST_IN_SCOPE, TEST_OUT_OF_SCOPE)),
+                                ("questions_dev_classes.json",
+                                 _as_records(DEV_CLASS_IN_SCOPE, DEV_CLASS_OUT_OF_SCOPE))):
         (OUT / filename).write_text(json.dumps(questions, ensure_ascii=False, indent=2), encoding="utf-8")
         answerable = sum(q["in_scope"] for q in questions)
         print(f"{OUT / filename}: {len(questions)} questions ({answerable} answerable, "
