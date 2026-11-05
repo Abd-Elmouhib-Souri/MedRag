@@ -15,11 +15,22 @@ Step 2 — full pipeline on DEV, to study errors (needs GROQ_API_KEY):
 Step 3 — ONCE, at the end, on the held-out TEST questions (the numbers to report):
     python -m scripts.evaluate --split test --threshold <same value>
 
-Outputs eval/results_<split>.json and eval/RESULTS_<split>.md.
+Latency (task: p50/p95 per question, retrieval vs LLM, machine described):
+    python -m scripts.evaluate --split dev --tag dev_latency
+
+Drug-class fix, on NEW dev questions written before the fix (never on test):
+    python -m scripts.evaluate --split dev_classes --drug-classes off   # baseline
+    python -m scripts.evaluate --split dev_classes --drug-classes on    # with the fix
+    python -m scripts.evaluate --split dev --drug-classes on            # no regression on the 32 dev questions
+
+Outputs eval/results_<tag>.json and eval/RESULTS_<tag>.md (tag = split by default).
 """
 
 import argparse
 import json
+import math
+import os
+import platform
 import shutil
 import statistics
 import time
@@ -37,7 +48,8 @@ def norm(text: str) -> str:
     return "".join(c for c in text if not unicodedata.combining(c)).replace(" ", "")
 
 
-QUESTION_FILES = {"dev": "questions.json", "test": "questions_test.json"}
+QUESTION_FILES = {"dev": "questions.json", "test": "questions_test.json",
+                  "dev_classes": "questions_dev_classes.json"}  # drug-class fix, dev only
 
 
 def _term_found(term, answer: str) -> bool:
@@ -194,20 +206,96 @@ def calibrate(questions: list[dict], rewrite: bool = False, target_recall: float
                                  "loo_kept": loo_kept, "loo_rejected": loo_rejected}}
 
 
+def _pct(values: list[float], p: float) -> float:
+    """
+    Nearest-rank percentile: the smallest value with at least p% of the values at or
+    below it. With 32 questions, p95 is the 31st fastest (only 1 question is slower).
+    """
+    ordered = sorted(values)
+    return ordered[max(0, math.ceil(p / 100 * len(ordered)) - 1)]
+
+
+def _cpu_name() -> str:
+    """Readable CPU model: Windows registry, Linux /proc/cpuinfo, else platform."""
+    if platform.system() == "Windows":
+        try:
+            import winreg
+            key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"HARDWARE\DESCRIPTION\System\CentralProcessor\0")
+            return winreg.QueryValueEx(key, "ProcessorNameString")[0].strip()
+        except OSError:
+            pass
+    try:
+        for line in Path("/proc/cpuinfo").read_text().splitlines():
+            if line.startswith("model name"):
+                return line.split(":", 1)[1].strip()
+    except OSError:
+        pass
+    return platform.processor() or "unknown"
+
+
+def _ram_gb() -> float | None:
+    """Total RAM in GB (Windows: GlobalMemoryStatusEx; Linux: /proc/meminfo)."""
+    if platform.system() == "Windows":
+        import ctypes
+
+        class MEMORYSTATUSEX(ctypes.Structure):  # Win32 struct, layout fixed by the API
+            _fields_ = [("dwLength", ctypes.c_ulong), ("dwMemoryLoad", ctypes.c_ulong),
+                        ("ullTotalPhys", ctypes.c_ulonglong), ("ullAvailPhys", ctypes.c_ulonglong),
+                        ("ullTotalPageFile", ctypes.c_ulonglong), ("ullAvailPageFile", ctypes.c_ulonglong),
+                        ("ullTotalVirtual", ctypes.c_ulonglong), ("ullAvailVirtual", ctypes.c_ulonglong),
+                        ("ullAvailExtendedVirtual", ctypes.c_ulonglong)]
+        stat = MEMORYSTATUSEX()
+        stat.dwLength = ctypes.sizeof(MEMORYSTATUSEX)
+        ctypes.windll.kernel32.GlobalMemoryStatusEx(ctypes.byref(stat))
+        return round(stat.ullTotalPhys / 1024 ** 3, 1)
+    try:
+        kb = int(Path("/proc/meminfo").read_text().split()[1])  # first line: MemTotal: N kB
+        return round(kb / 1024 ** 2, 1)
+    except (OSError, ValueError, IndexError):
+        return None
+
+
+def machine_info() -> dict:
+    """Where the LOCAL part (embeddings, BM25, reranker) ran. The LLMs run on Groq's servers."""
+    import torch
+    gpu = torch.cuda.get_device_name(0) if torch.cuda.is_available() else None
+    return {"os": f"{platform.system()} {platform.release()}", "cpu": _cpu_name(),
+            "logical_cores": os.cpu_count(), "ram_gb": _ram_gb(),
+            "device": f"GPU ({gpu})" if gpu else "CPU only", "python": platform.python_version(),
+            "torch": torch.__version__}
+
+
+def _warm_up() -> None:
+    """Load the reranker before timing: question 1 must not pay the model loading."""
+    from langchain_core.documents import Document
+
+    from app.reranker import rerank
+    t0 = time.perf_counter()
+    rerank("échauffement", [Document(page_content="échauffement du modèle")])
+    print(f"warm-up (reranker loading, not counted): {time.perf_counter() - t0:.1f} s")
+
+
 def full_eval(questions: list[dict], sleep: float) -> dict:
     """Run every question through the complete pipeline with the real LLMs."""
     from app.rag_pipeline import query_medrag
 
+    _warm_up()
     rows = []
     for n, q in enumerate(questions, 1):
         t0 = time.perf_counter()
-        r = query_medrag(q["question"], collection_name=q["collection"])
+        r = query_medrag(q["question"], collection_name=q["collection"])  # timed: the whole pipeline
         latency = time.perf_counter() - t0
         pages = [s["page"] for s in r["sources"]]
         by_gate = bool(r["refused"] and r.get("retrieval") and r["retrieval"]["kept"] == 0)
         row = {**q, "refused": r["refused"], "refused_by": ("gate" if by_gate else "llm") if r["refused"] else None,
                "pages": pages, "latency_s": round(latency, 2), "answer": r["answer"],
-               "grounding": r.get("grounding"), "top_score": (r.get("retrieval") or {}).get("top_score")}
+               "grounding": r.get("grounding"), "top_score": (r.get("retrieval") or {}).get("top_score"),
+               "queries": (r.get("retrieval") or {}).get("queries"), "timings_ms": r.get("timings_ms") or {}}
+        tm = row["timings_ms"]
+        # Search = hybrid retrieval + cross-encoder (local machine).
+        # LLM = query rewriting + answer + grounding judge (Groq API: network + servers).
+        row["retrieval_s"] = tm.get("retrieval", 0) / 1000
+        row["llm_s"] = (tm.get("rewrite", 0) + tm.get("generation", 0) + tm.get("grounding", 0)) / 1000
         if q["in_scope"]:
             row["hit"] = q["expected_page"] in pages
             row["correct"] = (not r["refused"]) and all(_term_found(t, r["answer"]) for t in q["expected_terms"])
@@ -216,14 +304,13 @@ def full_eval(questions: list[dict], sleep: float) -> dict:
             status = "ok" if row["correct"] else ("FALSE-REFUSAL" if r["refused"] else "WRONG")
         else:
             status = f"refused({row['refused_by']})" if r["refused"] else "ANSWERED!"  # must be refused
-        print(f"[{n:02d}/{len(questions)}] {'IN ' if q['in_scope'] else 'OUT'} {status:14s} {latency:5.1f}s  "
-              f"{q['question'][:55]}")
+        print(f"[{n:02d}/{len(questions)}] {'IN ' if q['in_scope'] else 'OUT'} {status:14s} {latency:5.1f}s "
+              f"(search {row['retrieval_s']:4.1f}s, LLM {row['llm_s']:4.1f}s)  {q['question'][:55]}")
         time.sleep(sleep)  # stay under the Groq free-tier rate limit
 
     ins = [r for r in rows if r["in_scope"]]
     outs = [r for r in rows if not r["in_scope"]]
     answered = [r for r in rows if not r["refused"] and r["grounding"] and r["grounding"].get("checked")]
-    lat = sorted(r["latency_s"] for r in rows)
     metrics = {
         "questions": len(rows), "in_scope": len(ins), "out_of_scope": len(outs),
         "retrieval_hit_at_5": round(sum(r["hit"] for r in ins) / len(ins), 3),
@@ -234,26 +321,39 @@ def full_eval(questions: list[dict], sleep: float) -> dict:
         "out_of_scope_refused_by_llm": round(sum(r["refused_by"] == "llm" for r in outs) / len(outs), 3),
         "grounded_answer_rate": round(sum(bool(r["grounding"].get("grounded")) for r in answered) / len(answered), 3)
         if answered else None,
-        "latency_p50_s": round(statistics.median(lat), 2),
-        "latency_p95_s": round(lat[max(0, int(len(lat) * 0.95) - 1)], 2),
+        # End-to-end latency per question (pause between questions NOT included)
+        "latency_p50_s": round(_pct([r["latency_s"] for r in rows], 50), 2),
+        "latency_p95_s": round(_pct([r["latency_s"] for r in rows], 95), 2),
+        "retrieval_p50_s": round(_pct([r["retrieval_s"] for r in rows], 50), 2),
+        "retrieval_p95_s": round(_pct([r["retrieval_s"] for r in rows], 95), 2),
+        "llm_p50_s": round(_pct([r["llm_s"] for r in rows], 50), 2),
+        "llm_p95_s": round(_pct([r["llm_s"] for r in rows], 95), 2),
+        "answered_latency_p50_s": (round(_pct([r["latency_s"] for r in rows if not r["refused"]], 50), 2)
+                                   if any(not r["refused"] for r in rows) else None),
     }
     return {"settings": {"llm": config.MODEL_STRONG, "llm_fast": config.MODEL_FAST,
                          "reranker": config.RERANKER_MODEL, "threshold": config.RELEVANCE_THRESHOLD,
-                         "embeddings": config.EMBEDDING_MODEL, "chunk_size": config.CHUNK_SIZE},
+                         "embeddings": config.EMBEDDING_MODEL, "chunk_size": config.CHUNK_SIZE,
+                         "drug_class_expansion": config.DRUG_CLASS_EXPANSION, "machine": machine_info()},
             "metrics": metrics, "rows": rows}
 
 
-def write_markdown(result: dict, split: str) -> None:
+def write_markdown(result: dict, split: str, tag: str) -> None:
     """A README-ready table of the metrics for one split."""
     m, s = result["metrics"], result["settings"]
     lines = [
         f"# MedRAG evaluation results ({split} set)", "",
         f"Corpus: 4 fictional multi-page records, {m['in_scope']} answerable questions (FR/EN/AR, with typos) "
         f"and {m['out_of_scope']} unanswerable ones"
-        + (" — held-out questions, never used to tune the system." if split == "test" else
-           " — the dev questions used for tuning (expect optimistic numbers).") , "",
+        + {"test": " — held-out questions, never used to tune the system.",
+           "dev": " — the dev questions used for tuning (expect optimistic numbers).",
+           "dev_classes": " — NEW dev questions naming a drug class, written before the drug-class fix."}[split], "",
         f"Settings: LLM `{s['llm']}`, rewriting/judge `{s['llm_fast']}`, reranker `{s['reranker']}`, "
-        f"threshold {s['threshold']}, chunk size {s['chunk_size']}.", "",
+        f"threshold {s['threshold']}, chunk size {s['chunk_size']}, "
+        f"drug-class expansion {'on' if s['drug_class_expansion'] else 'off'}.", "",
+        f"Machine (local part: embeddings, BM25, reranker): {s['machine']['cpu']}, {s['machine']['logical_cores']} "
+        f"logical cores, {s['machine']['ram_gb']} GB RAM, {s['machine']['device']}, {s['machine']['os']}. "
+        "LLM calls run on Groq's servers, so their time includes the network.", "",
         "| Metric | Value |", "| --- | --- |",
         f"| Retrieval hit@5 (right page among sources) | {m['retrieval_hit_at_5']:.0%} |",
         f"| Answer accuracy (expected facts in the answer) | {m['answer_accuracy']:.0%} |",
@@ -262,17 +362,24 @@ def write_markdown(result: dict, split: str) -> None:
         f"| False refusal on answerable questions | {m['false_refusal_rate']:.0%} |",
         (f"| Grounded answers (judge found no unsupported sentence) | {m['grounded_answer_rate']:.0%} |"
          if m["grounded_answer_rate"] is not None else "| Grounded answers | not measured |"),
-        f"| Latency p50 / p95 | {m['latency_p50_s']} s / {m['latency_p95_s']} s |",
+        f"| Latency p50 / p95, end to end | {m['latency_p50_s']} s / {m['latency_p95_s']} s |",
+        f"| - of which search (hybrid retrieval + reranker), p50 / p95 | "
+        f"{m['retrieval_p50_s']} s / {m['retrieval_p95_s']} s |",
+        f"| - of which LLM (rewrite + answer + judge), p50 / p95 | {m['llm_p50_s']} s / {m['llm_p95_s']} s |",
     ]
-    (EVAL / f"RESULTS_{split}.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    (EVAL / f"RESULTS_{tag}.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--calibrate", action="store_true", help="only choose the relevance threshold")
     parser.add_argument("--rewrite", action="store_true", help="calibrate on LLM-rewritten queries (needs Groq)")
-    parser.add_argument("--split", choices=["dev", "test"], default="dev",
-                        help="dev = tuning questions; test = held-out questions, run once at the end")
+    parser.add_argument("--split", choices=sorted(QUESTION_FILES), default="dev",
+                        help="dev = tuning questions; test = held-out questions, run once at the end; "
+                             "dev_classes = new dev questions for the drug-class fix")
+    parser.add_argument("--drug-classes", choices=["on", "off"],
+                        help="force the drug-class expansion on/off (default: DRUG_CLASS_EXPANSION setting)")
+    parser.add_argument("--tag", help="name of the output files (default: split, + _drugclasses if on)")
     parser.add_argument("--target-recall", type=float, default=0.95,
                         help="share of answerable dev questions the gate must keep (default 0.95)")
     parser.add_argument("--threshold", type=float, help="override RELEVANCE_THRESHOLD")
@@ -287,8 +394,11 @@ def main() -> None:
     shutil.rmtree(config.CHROMA_DIR, ignore_errors=True)
     if args.threshold is not None:
         config.RELEVANCE_THRESHOLD = args.threshold
-    if args.calibrate and args.split == "test":
-        parser.error("never calibrate on the test split: it would leak the test questions into tuning")
+    if args.calibrate and args.split != "dev":
+        parser.error("calibrate on the dev split only: test must stay unseen, dev_classes evaluates a fix")
+    if args.drug_classes:
+        config.DRUG_CLASS_EXPANSION = args.drug_classes == "on"
+    tag = args.tag or args.split + ("_drugclasses" if config.DRUG_CLASS_EXPANSION else "")
     questions = load_corpus(args.split)
 
     if args.calibrate:
@@ -297,11 +407,11 @@ def main() -> None:
         return
 
     result = full_eval(questions, args.sleep)
-    (EVAL / f"results_{args.split}.json").write_text(json.dumps(result, ensure_ascii=False, indent=2),
-                                                     encoding="utf-8")
-    write_markdown(result, args.split)
-    print("\n" + json.dumps(result["metrics"], indent=2))
-    print(f"\nSaved {EVAL}/results_{args.split}.json and {EVAL}/RESULTS_{args.split}.md")
+    (EVAL / f"results_{tag}.json").write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
+    write_markdown(result, args.split, tag)
+    print("\nMachine: " + json.dumps(result["settings"]["machine"], ensure_ascii=False))
+    print(json.dumps(result["metrics"], indent=2))
+    print(f"\nSaved {EVAL}/results_{tag}.json and {EVAL}/RESULTS_{tag}.md")
 
 
 if __name__ == "__main__":

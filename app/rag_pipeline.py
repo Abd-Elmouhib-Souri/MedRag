@@ -26,6 +26,7 @@ from langchain_core.prompts import ChatPromptTemplate
 
 from app import config
 from app.alert_detector import detect_alerts
+from app.drug_classes import expand_query
 from app.grounding import check_grounding
 from app.guardrails import wrap_context
 from app.llm_chain import NOT_FOUND_ANSWER, get_llm, get_llm_chain
@@ -152,6 +153,12 @@ def retrieve(question: str, rewritten: str, collection_name: str, context_k: int
     result.queries = [rewritten]
     if config.MULTI_QUERY and rewritten.strip().lower() != question.strip().lower():
         result.queries.append(question)  # the raw question can keep terms the rewrite dropped
+    if config.DRUG_CLASS_EXPANSION:
+        # "Quel bêtabloquant ?" -> one more query listing bisoprolol, aténolol, ... so BM25 and the
+        # reranker can match the molecule written in the record (see app/drug_classes.py).
+        expanded = expand_query(question, rewritten)
+        if expanded:
+            result.queries.append(expanded)
 
     k = config.TOP_K_CANDIDATES
     store = get_vector_store(collection_name)
@@ -214,8 +221,9 @@ def query_medrag(question: str, top_k: int | None = None, collection_name: str =
     # can drift, e.g. "dose de metformine" -> "dose de méthformin").
     answer = get_llm_chain().invoke({"context": context, "question": question})
     t3 = time.perf_counter()
-    grounding = check_grounding(answer, context)
-    alert = detect_alerts(answer=answer, context=context)
+    grounding = check_grounding(answer, context)            # LLM judge (Groq)
+    t3b = time.perf_counter()
+    alert = detect_alerts(answer=answer, context=context)   # local rules, no LLM
     t4 = time.perf_counter()
 
     return {
@@ -227,6 +235,7 @@ def query_medrag(question: str, top_k: int | None = None, collection_name: str =
         "retrieval": retrieval.to_dict(),
         "timings_ms": {"rewrite": round((t1 - t0) * 1000), "retrieval": round((t2 - t1) * 1000),
                        "generation": round((t3 - t2) * 1000), "checks": round((t4 - t3) * 1000),
+                       "grounding": round((t3b - t3) * 1000), "alerts": round((t4 - t3b) * 1000),
                        "total": round((t4 - t0) * 1000)},
     }
 

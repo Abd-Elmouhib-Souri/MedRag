@@ -73,6 +73,9 @@ WEIGHT_DENSE     = _float("WEIGHT_DENSE", 0.7)    # ChromaDB share in rank fusio
 WEIGHT_BM25      = _float("WEIGHT_BM25", 0.3)     # BM25 share in rank fusion
 RRF_K            = _int("RRF_K", 60)              # standard Reciprocal Rank Fusion constant
 MULTI_QUERY      = _bool("MULTI_QUERY", True)     # search with original AND rewritten query
+# Drug-class expansion (app/drug_classes.py): "bêtabloquant" -> also search "bisoprolol, ...".
+# OFF until measured on the new dev questions (eval/questions_dev_classes.json).
+DRUG_CLASS_EXPANSION = _bool("DRUG_CLASS_EXPANSION", False)
 
 # ── Relevance gate (cross-encoder reranking) ──────────────────────────────────
 # Measured on the 32 dev questions, raw queries, same pipeline (see README, Evaluation):
