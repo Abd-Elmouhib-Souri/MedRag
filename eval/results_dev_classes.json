@@ -1,0 +1,628 @@
+{
+  "settings": {
+    "llm": "openai/gpt-oss-120b",
+    "llm_fast": "openai/gpt-oss-20b",
+    "reranker": "BAAI/bge-reranker-v2-m3",
+    "threshold": 0.0034,
+    "embeddings": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+    "chunk_size": 600,
+    "drug_class_expansion": false,
+    "machine": {
+      "os": "Windows 11",
+      "cpu": "13th Gen Intel(R) Core(TM) i5-13450HX",
+      "logical_cores": 16,
+      "ram_gb": 39.7,
+      "device": "CPU only",
+      "python": "3.11.17",
+      "torch": "2.14.1+cpu"
+    }
+  },
+  "metrics": {
+    "questions": 17,
+    "in_scope": 11,
+    "out_of_scope": 6,
+    "retrieval_hit_at_5": 0.364,
+    "answer_accuracy": 0.364,
+    "false_refusal_rate": 0.636,
+    "out_of_scope_refusal_rate": 1.0,
+    "out_of_scope_refused_by_gate": 0.833,
+    "out_of_scope_refused_by_llm": 0.167,
+    "grounded_answer_rate": 1.0,
+    "latency_p50_s": 3.77,
+    "latency_p95_s": 7.14,
+    "retrieval_p50_s": 1.54,
+    "retrieval_p95_s": 2.75,
+    "llm_p50_s": 1.66,
+    "llm_p95_s": 5.11,
+    "answered_latency_p50_s": 6.11
+  },
+  "rows": [
+    {
+      "collection": "dossier_ben_amor_hedi",
+      "question": "Prend-il un antivitamine K ? Lequel ?",
+      "in_scope": true,
+      "expected_page": 2,
+      "expected_terms": [
+        "warfarine"
+      ],
+      "refused": true,
+      "refused_by": "gate",
+      "pages": [],
+      "latency_s": 3.38,
+      "answer": "Information non trouvée dans les documents fournis.",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": "refused by relevance gate"
+      },
+      "top_score": 0.0006,
+      "queries": [
+        "Prend-il un antivitamine K ? Lequel ?",
+        "Prend-il un antivitamine K ? Lequel ?"
+      ],
+      "timings_ms": {
+        "rewrite": 1295,
+        "retrieval": 2087,
+        "total": 3381
+      },
+      "retrieval_s": 2.087,
+      "llm_s": 1.295,
+      "hit": false,
+      "correct": false
+    },
+    {
+      "collection": "dossier_ben_amor_hedi",
+      "question": "ما هو الدواء المضاد للتخثر الذي يتناوله؟",
+      "in_scope": true,
+      "expected_page": 2,
+      "expected_terms": [
+        [
+          "warfarine",
+          "warfarin",
+          "وارفارين"
+        ]
+      ],
+      "refused": false,
+      "refused_by": null,
+      "pages": [
+        2,
+        3
+      ],
+      "latency_s": 7.14,
+      "answer": "الدواء المضاد للتخثر هو الوارفارين. [Page 2]",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": ""
+      },
+      "top_score": 0.0055,
+      "queries": [
+        "Quel médicament anticoagulant prend-il?",
+        "ما هو الدواء المضاد للتخثر الذي يتناوله؟"
+      ],
+      "timings_ms": {
+        "rewrite": 1243,
+        "retrieval": 2029,
+        "generation": 3276,
+        "checks": 592,
+        "grounding": 587,
+        "alerts": 5,
+        "total": 7139
+      },
+      "retrieval_s": 2.029,
+      "llm_s": 5.106,
+      "hit": true,
+      "correct": true
+    },
+    {
+      "collection": "dossier_gharbi_salma",
+      "question": "Quel corticoïde inhalé utilise-t-elle ?",
+      "in_scope": true,
+      "expected_page": 2,
+      "expected_terms": [
+        "budésonide"
+      ],
+      "refused": true,
+      "refused_by": "gate",
+      "pages": [],
+      "latency_s": 3.77,
+      "answer": "Information non trouvée dans les documents fournis.",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": "refused by relevance gate"
+      },
+      "top_score": 0.0012,
+      "queries": [
+        "Quel corticoïde inhalé utilise-t-elle?",
+        "Quel corticoïde inhalé utilise-t-elle ?"
+      ],
+      "timings_ms": {
+        "rewrite": 1053,
+        "retrieval": 2715,
+        "total": 3769
+      },
+      "retrieval_s": 2.715,
+      "llm_s": 1.053,
+      "hit": false,
+      "correct": false
+    },
+    {
+      "collection": "dossier_gharbi_salma",
+      "question": "Quel bronchodilatateur d'action rapide a-t-elle en cas de crise ?",
+      "in_scope": true,
+      "expected_page": 2,
+      "expected_terms": [
+        "salbutamol"
+      ],
+      "refused": false,
+      "refused_by": null,
+      "pages": [
+        2
+      ],
+      "latency_s": 6.11,
+      "answer": "Le bronchodilatateur d'action rapide prescrit en cas de crise est le salbutamol 100 µg, deux bouffées en cas de gêne respiratoire. [Page 2]",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": ""
+      },
+      "top_score": 0.0298,
+      "queries": [
+        "Quel bronchodilatateur d'action rapide a-t-elle en cas de crise?",
+        "Quel bronchodilatateur d'action rapide a-t-elle en cas de crise ?"
+      ],
+      "timings_ms": {
+        "rewrite": 976,
+        "retrieval": 2753,
+        "generation": 1166,
+        "checks": 1213,
+        "grounding": 1212,
+        "alerts": 2,
+        "total": 6108
+      },
+      "retrieval_s": 2.753,
+      "llm_s": 3.354,
+      "hit": true,
+      "correct": true
+    },
+    {
+      "collection": "dossier_gharbi_salma",
+      "question": "Quel bêta-2 agoniste de longue durée d'action reçoit-elle ?",
+      "in_scope": true,
+      "expected_page": 2,
+      "expected_terms": [
+        "formotérol"
+      ],
+      "refused": true,
+      "refused_by": "gate",
+      "pages": [],
+      "latency_s": 2.55,
+      "answer": "Information non trouvée dans les documents fournis.",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": "refused by relevance gate"
+      },
+      "top_score": 0.0011,
+      "queries": [
+        "Quel bêta-2 agoniste de longue durée d'action reçoit-elle ?"
+      ],
+      "timings_ms": {
+        "rewrite": 1264,
+        "retrieval": 1284,
+        "total": 2548
+      },
+      "retrieval_s": 1.284,
+      "llm_s": 1.264,
+      "hit": false,
+      "correct": false
+    },
+    {
+      "collection": "dossier_trabelsi_youssef",
+      "question": "Quel IEC prend-il ?",
+      "in_scope": true,
+      "expected_page": 2,
+      "expected_terms": [
+        "ramipril"
+      ],
+      "refused": true,
+      "refused_by": "gate",
+      "pages": [],
+      "latency_s": 2.26,
+      "answer": "Information non trouvée dans les documents fournis.",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": "refused by relevance gate"
+      },
+      "top_score": 0.0005,
+      "queries": [
+        "Quel IEC prend-il ?"
+      ],
+      "timings_ms": {
+        "rewrite": 1051,
+        "retrieval": 1205,
+        "total": 2256
+      },
+      "retrieval_s": 1.205,
+      "llm_s": 1.051,
+      "hit": false,
+      "correct": false
+    },
+    {
+      "collection": "dossier_trabelsi_youssef",
+      "question": "Which ACE inhibitor is he taking?",
+      "in_scope": true,
+      "expected_page": 2,
+      "expected_terms": [
+        "ramipril"
+      ],
+      "refused": false,
+      "refused_by": null,
+      "pages": [
+        3,
+        2
+      ],
+      "latency_s": 5.46,
+      "answer": "He is taking ramipril. [Page 2]",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": ""
+      },
+      "top_score": 0.0055,
+      "queries": [
+        "Quel inhibiteur de l'enzyme de conversion de l'angiotensine (ACE) prend-il ?",
+        "Which ACE inhibitor is he taking?"
+      ],
+      "timings_ms": {
+        "rewrite": 946,
+        "retrieval": 2683,
+        "generation": 1078,
+        "checks": 753,
+        "grounding": 750,
+        "alerts": 2,
+        "total": 5460
+      },
+      "retrieval_s": 2.683,
+      "llm_s": 2.774,
+      "hit": true,
+      "correct": true
+    },
+    {
+      "collection": "dossier_trabelsi_youssef",
+      "question": "Quelle est la dose de son biguanide ?",
+      "in_scope": true,
+      "expected_page": 2,
+      "expected_terms": [
+        "1000"
+      ],
+      "refused": true,
+      "refused_by": "gate",
+      "pages": [],
+      "latency_s": 1.85,
+      "answer": "Information non trouvée dans les documents fournis.",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": "refused by relevance gate"
+      },
+      "top_score": 0.002,
+      "queries": [
+        "Quelle est la dose de son biguanide ?"
+      ],
+      "timings_ms": {
+        "rewrite": 604,
+        "retrieval": 1249,
+        "total": 1854
+      },
+      "retrieval_s": 1.249,
+      "llm_s": 0.604,
+      "hit": false,
+      "correct": false
+    },
+    {
+      "collection": "dossier_trabelsi_youssef",
+      "question": "Quelle gliptine a été ajoutée à son traitement ?",
+      "in_scope": true,
+      "expected_page": 3,
+      "expected_terms": [
+        "sitagliptine"
+      ],
+      "refused": false,
+      "refused_by": null,
+      "pages": [
+        3
+      ],
+      "latency_s": 6.31,
+      "answer": "La sitagliptine a été ajoutée à son traitement. [Page 3]",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": ""
+      },
+      "top_score": 0.0063,
+      "queries": [
+        "Quelle gliptine a été ajoutée à son traitement?",
+        "Quelle gliptine a été ajoutée à son traitement ?"
+      ],
+      "timings_ms": {
+        "rewrite": 1404,
+        "retrieval": 2606,
+        "generation": 1376,
+        "checks": 926,
+        "grounding": 925,
+        "alerts": 1,
+        "total": 6312
+      },
+      "retrieval_s": 2.606,
+      "llm_s": 3.705,
+      "hit": true,
+      "correct": true
+    },
+    {
+      "collection": "dossier_trabelsi_youssef",
+      "question": "Quel inhibiteur de la DPP-4 lui a été prescrit ?",
+      "in_scope": true,
+      "expected_page": 3,
+      "expected_terms": [
+        "sitagliptine"
+      ],
+      "refused": true,
+      "refused_by": "gate",
+      "pages": [],
+      "latency_s": 1.78,
+      "answer": "Information non trouvée dans les documents fournis.",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": "refused by relevance gate"
+      },
+      "top_score": 0.0028,
+      "queries": [
+        "Quel inhibiteur de la DPP-4 lui a été prescrit ?"
+      ],
+      "timings_ms": {
+        "rewrite": 494,
+        "retrieval": 1287,
+        "total": 1780
+      },
+      "retrieval_s": 1.287,
+      "llm_s": 0.494,
+      "hit": false,
+      "correct": false
+    },
+    {
+      "collection": "dossier_mansour_lina",
+      "question": "Quelle est la posologie de son anticonvulsivant ?",
+      "in_scope": true,
+      "expected_page": 2,
+      "expected_terms": [
+        "300"
+      ],
+      "refused": true,
+      "refused_by": "gate",
+      "pages": [],
+      "latency_s": 3.97,
+      "answer": "Information non trouvée dans les documents fournis.",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": "refused by relevance gate"
+      },
+      "top_score": 0.0004,
+      "queries": [
+        "Quelle est la posologie de son anticonvulsivant ?"
+      ],
+      "timings_ms": {
+        "rewrite": 3218,
+        "retrieval": 750,
+        "total": 3968
+      },
+      "retrieval_s": 0.75,
+      "llm_s": 3.218,
+      "hit": false,
+      "correct": false
+    },
+    {
+      "collection": "dossier_gharbi_salma",
+      "question": "Quel anticoagulant prend-elle ?",
+      "in_scope": false,
+      "refused": true,
+      "refused_by": "gate",
+      "pages": [],
+      "latency_s": 3.76,
+      "answer": "Information non trouvée dans les documents fournis.",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": "refused by relevance gate"
+      },
+      "top_score": 0.0013,
+      "queries": [
+        "Quel anticoagulant prend-elle ?"
+      ],
+      "timings_ms": {
+        "rewrite": 2553,
+        "retrieval": 1204,
+        "total": 3758
+      },
+      "retrieval_s": 1.204,
+      "llm_s": 2.553
+    },
+    {
+      "collection": "dossier_mansour_lina",
+      "question": "Quelle statine prend l'enfant ?",
+      "in_scope": false,
+      "refused": true,
+      "refused_by": "llm",
+      "pages": [
+        2
+      ],
+      "latency_s": 4.6,
+      "answer": "Information non trouvée dans les documents fournis.",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": "refusal"
+      },
+      "top_score": 0.0054,
+      "queries": [
+        "Quelle statine l'enfant prend-il?",
+        "Quelle statine prend l'enfant ?"
+      ],
+      "timings_ms": {
+        "rewrite": 862,
+        "retrieval": 1554,
+        "generation": 2178,
+        "checks": 2,
+        "grounding": 0,
+        "alerts": 2,
+        "total": 4597
+      },
+      "retrieval_s": 1.554,
+      "llm_s": 3.04
+    },
+    {
+      "collection": "dossier_ben_amor_hedi",
+      "question": "Quel IEC prend-il ?",
+      "in_scope": false,
+      "refused": true,
+      "refused_by": "gate",
+      "pages": [],
+      "latency_s": 2.04,
+      "answer": "Information non trouvée dans les documents fournis.",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": "refused by relevance gate"
+      },
+      "top_score": 0.0002,
+      "queries": [
+        "Quel IEC prend-il ?"
+      ],
+      "timings_ms": {
+        "rewrite": 1114,
+        "retrieval": 931,
+        "total": 2045
+      },
+      "retrieval_s": 0.931,
+      "llm_s": 1.114
+    },
+    {
+      "collection": "dossier_trabelsi_youssef",
+      "question": "Quel bêtabloquant prend-il ?",
+      "in_scope": false,
+      "refused": true,
+      "refused_by": "gate",
+      "pages": [],
+      "latency_s": 4.18,
+      "answer": "Information non trouvée dans les documents fournis.",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": "refused by relevance gate"
+      },
+      "top_score": 0.0022,
+      "queries": [
+        "Quel bêtabloquant prend-il?",
+        "Quel bêtabloquant prend-il ?"
+      ],
+      "timings_ms": {
+        "rewrite": 1657,
+        "retrieval": 2524,
+        "total": 4180
+      },
+      "retrieval_s": 2.524,
+      "llm_s": 1.657
+    },
+    {
+      "collection": "dossier_gharbi_salma",
+      "question": "Quel antidiabétique prend-elle ?",
+      "in_scope": false,
+      "refused": true,
+      "refused_by": "gate",
+      "pages": [],
+      "latency_s": 2.21,
+      "answer": "Information non trouvée dans les documents fournis.",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": "refused by relevance gate"
+      },
+      "top_score": 0.0012,
+      "queries": [
+        "Quel antidiabétique prend-elle ?"
+      ],
+      "timings_ms": {
+        "rewrite": 984,
+        "retrieval": 1222,
+        "total": 2205
+      },
+      "retrieval_s": 1.222,
+      "llm_s": 0.984
+    },
+    {
+      "collection": "dossier_mansour_lina",
+      "question": "Which beta blocker is she taking?",
+      "in_scope": false,
+      "refused": true,
+      "refused_by": "gate",
+      "pages": [],
+      "latency_s": 4.21,
+      "answer": "Information non trouvée dans les documents fournis.",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": "refused by relevance gate"
+      },
+      "top_score": 0.0003,
+      "queries": [
+        "Quel bêta-bloquant prend-elle ?",
+        "Which beta blocker is she taking?"
+      ],
+      "timings_ms": {
+        "rewrite": 2671,
+        "retrieval": 1541,
+        "total": 4212
+      },
+      "retrieval_s": 1.541,
+      "llm_s": 2.671
+    }
+  ]
+}

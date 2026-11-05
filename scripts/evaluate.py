@@ -255,11 +255,25 @@ def _ram_gb() -> float | None:
         return None
 
 
+def _os_name() -> str:
+    """
+    OS label. Python 3.11 reports Windows 11 as release "10" (both share kernel 10.0);
+    Windows 11 is any build >= 22000 (measured: "Windows 10" was printed on a Windows 11 PC).
+    """
+    if platform.system() == "Windows":
+        try:
+            build = int(platform.version().split(".")[2])  # "10.0.22631" -> 22631
+            return "Windows 11" if build >= 22000 else "Windows 10"
+        except (IndexError, ValueError):
+            pass
+    return f"{platform.system()} {platform.release()}"
+
+
 def machine_info() -> dict:
     """Where the LOCAL part (embeddings, BM25, reranker) ran. The LLMs run on Groq's servers."""
     import torch
     gpu = torch.cuda.get_device_name(0) if torch.cuda.is_available() else None
-    return {"os": f"{platform.system()} {platform.release()}", "cpu": _cpu_name(),
+    return {"os": _os_name(), "cpu": _cpu_name(),
             "logical_cores": os.cpu_count(), "ram_gb": _ram_gb(),
             "device": f"GPU ({gpu})" if gpu else "CPU only", "python": platform.python_version(),
             "torch": torch.__version__}
@@ -343,7 +357,8 @@ def write_markdown(result: dict, split: str, tag: str) -> None:
     m, s = result["metrics"], result["settings"]
     lines = [
         f"# MedRAG evaluation results ({split} set)", "",
-        f"Corpus: 4 fictional multi-page records, {m['in_scope']} answerable questions (FR/EN/AR, with typos) "
+        f"Corpus: 4 fictional multi-page records, {m['in_scope']} answerable questions "
+        f"({'FR/EN/AR' if split == 'dev_classes' else 'FR/EN/AR, with typos'}) "
         f"and {m['out_of_scope']} unanswerable ones"
         + {"test": " — held-out questions, never used to tune the system.",
            "dev": " — the dev questions used for tuning (expect optimistic numbers).",

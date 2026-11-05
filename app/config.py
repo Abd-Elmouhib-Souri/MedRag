@@ -74,8 +74,10 @@ WEIGHT_BM25      = _float("WEIGHT_BM25", 0.3)     # BM25 share in rank fusion
 RRF_K            = _int("RRF_K", 60)              # standard Reciprocal Rank Fusion constant
 MULTI_QUERY      = _bool("MULTI_QUERY", True)     # search with original AND rewritten query
 # Drug-class expansion (app/drug_classes.py): "bêtabloquant" -> also search "bisoprolol, ...".
-# OFF until measured on the new dev questions (eval/questions_dev_classes.json).
-DRUG_CLASS_EXPANSION = _bool("DRUG_CLASS_EXPANSION", False)
+# Measured on 17 NEW dev questions written before the fix (eval/questions_dev_classes.json):
+# answers 4/11 -> 10/11, traps refused 6/6 -> 6/6; on the 32 dev questions: 18/20 -> 18/20,
+# 12/12 -> 12/12. Not measured on the held-out test set (it revealed the problem).
+DRUG_CLASS_EXPANSION = _bool("DRUG_CLASS_EXPANSION", True)
 
 # ── Relevance gate (cross-encoder reranking) ──────────────────────────────────
 # Measured on the 32 dev questions, raw queries, same pipeline (see README, Evaluation):

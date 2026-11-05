@@ -1,0 +1,1198 @@
+{
+  "settings": {
+    "llm": "openai/gpt-oss-120b",
+    "llm_fast": "openai/gpt-oss-20b",
+    "reranker": "BAAI/bge-reranker-v2-m3",
+    "threshold": 0.0034,
+    "embeddings": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+    "chunk_size": 600,
+    "drug_class_expansion": false,
+    "machine": {
+      "os": "Windows 11",
+      "cpu": "13th Gen Intel(R) Core(TM) i5-13450HX",
+      "logical_cores": 16,
+      "ram_gb": 39.7,
+      "device": "CPU only",
+      "python": "3.11.17",
+      "torch": "2.14.1+cpu"
+    }
+  },
+  "metrics": {
+    "questions": 32,
+    "in_scope": 20,
+    "out_of_scope": 12,
+    "retrieval_hit_at_5": 0.95,
+    "answer_accuracy": 0.9,
+    "false_refusal_rate": 0.05,
+    "out_of_scope_refusal_rate": 1.0,
+    "out_of_scope_refused_by_gate": 1.0,
+    "out_of_scope_refused_by_llm": 0.0,
+    "grounded_answer_rate": 1.0,
+    "latency_p50_s": 4.25,
+    "latency_p95_s": 9.13,
+    "retrieval_p50_s": 1.25,
+    "retrieval_p95_s": 2.62,
+    "llm_p50_s": 2.75,
+    "llm_p95_s": 7.75,
+    "answered_latency_p50_s": 5.48
+  },
+  "rows": [
+    {
+      "collection": "dossier_ben_amor_hedi",
+      "question": "Quelle est la dose de warfarine prescrite au départ ?",
+      "in_scope": true,
+      "expected_page": 2,
+      "expected_terms": [
+        "5 mg"
+      ],
+      "refused": false,
+      "refused_by": null,
+      "pages": [
+        3,
+        2
+      ],
+      "latency_s": 6.12,
+      "answer": "La dose de warfarine prescrite au départ était de 5 mg le soir. [Page 2]",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": ""
+      },
+      "top_score": 0.2608,
+      "queries": [
+        "Quelle est la dose de warfarine prescrite au départ?",
+        "Quelle est la dose de warfarine prescrite au départ ?"
+      ],
+      "timings_ms": {
+        "rewrite": 1694,
+        "retrieval": 2156,
+        "generation": 1046,
+        "checks": 1228,
+        "grounding": 1222,
+        "alerts": 5,
+        "total": 6123
+      },
+      "retrieval_s": 2.156,
+      "llm_s": 3.962,
+      "hit": true,
+      "correct": true
+    },
+    {
+      "collection": "dossier_ben_amor_hedi",
+      "question": "Quel était le dernier INR ?",
+      "in_scope": true,
+      "expected_page": 3,
+      "expected_terms": [
+        "3,8"
+      ],
+      "refused": false,
+      "refused_by": null,
+      "pages": [
+        3,
+        2
+      ],
+      "latency_s": 5.43,
+      "answer": "Le dernier INR était de 3,8 [Page 3]",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": ""
+      },
+      "top_score": 0.6466,
+      "queries": [
+        "Quel était le dernier INR?",
+        "Quel était le dernier INR ?"
+      ],
+      "timings_ms": {
+        "rewrite": 1154,
+        "retrieval": 2054,
+        "generation": 851,
+        "checks": 1372,
+        "grounding": 1370,
+        "alerts": 2,
+        "total": 5431
+      },
+      "retrieval_s": 2.054,
+      "llm_s": 3.375,
+      "hit": true,
+      "correct": true
+    },
+    {
+      "collection": "dossier_ben_amor_hedi",
+      "question": "Le patient a-t-il une allergie ?",
+      "in_scope": true,
+      "expected_page": 1,
+      "expected_terms": [
+        "iode"
+      ],
+      "refused": false,
+      "refused_by": null,
+      "pages": [
+        1,
+        3
+      ],
+      "latency_s": 3.19,
+      "answer": "Oui, il a une allergie documentée à l'iode (réaction cutanée lors d'un scanner en 2020) [Page 1].",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": ""
+      },
+      "top_score": 0.4173,
+      "queries": [
+        "Le patient a-t-il une allergie ?"
+      ],
+      "timings_ms": {
+        "rewrite": 821,
+        "retrieval": 1024,
+        "generation": 730,
+        "checks": 619,
+        "grounding": 617,
+        "alerts": 2,
+        "total": 3193
+      },
+      "retrieval_s": 1.024,
+      "llm_s": 2.168,
+      "hit": true,
+      "correct": true
+    },
+    {
+      "collection": "dossier_ben_amor_hedi",
+      "question": "Peut-on lui donner de l'aspirine ?",
+      "in_scope": true,
+      "expected_page": 2,
+      "expected_terms": [
+        "hémorragique"
+      ],
+      "refused": false,
+      "refused_by": null,
+      "pages": [
+        2
+      ],
+      "latency_s": 4.09,
+      "answer": "Non, l'association de l'aspirine avec la warfarine est déconseillée en raison d'un risque hémorragique majeur. [Page 2]",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": ""
+      },
+      "top_score": 0.014,
+      "queries": [
+        "Peut-on lui donner de l'aspirine?",
+        "Peut-on lui donner de l'aspirine ?"
+      ],
+      "timings_ms": {
+        "rewrite": 600,
+        "retrieval": 2158,
+        "generation": 716,
+        "checks": 618,
+        "grounding": 616,
+        "alerts": 2,
+        "total": 4092
+      },
+      "retrieval_s": 2.158,
+      "llm_s": 1.932,
+      "hit": true,
+      "correct": true
+    },
+    {
+      "collection": "dossier_ben_amor_hedi",
+      "question": "Quelle décision a été prise après l'INR élevé ?",
+      "in_scope": true,
+      "expected_page": 3,
+      "expected_terms": [
+        "4 mg"
+      ],
+      "refused": false,
+      "refused_by": null,
+      "pages": [
+        3,
+        2
+      ],
+      "latency_s": 5.48,
+      "answer": "Après cet INR élevé, la dose de warfarine a été réduite à 4 mg et un contrôle de l’INR est prévu dans 7 jours. [Page 3]",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": ""
+      },
+      "top_score": 0.0683,
+      "queries": [
+        "Quelle décision a été prise après l'INR élevé ?"
+      ],
+      "timings_ms": {
+        "rewrite": 1340,
+        "retrieval": 1030,
+        "generation": 1074,
+        "checks": 2032,
+        "grounding": 2030,
+        "alerts": 2,
+        "total": 5476
+      },
+      "retrieval_s": 1.03,
+      "llm_s": 4.444,
+      "hit": true,
+      "correct": true
+    },
+    {
+      "collection": "dossier_ben_amor_hedi",
+      "question": "quell anticoagulan il prend ?",
+      "in_scope": true,
+      "expected_page": 2,
+      "expected_terms": [
+        "warfarine"
+      ],
+      "refused": false,
+      "refused_by": null,
+      "pages": [
+        2
+      ],
+      "latency_s": 8.81,
+      "answer": "Il prend de la warfarine. [Page 2]",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": ""
+      },
+      "top_score": 0.0035,
+      "queries": [
+        "Quel anticoagulant prend-il ?",
+        "quell anticoagulan il prend ?"
+      ],
+      "timings_ms": {
+        "rewrite": 3409,
+        "retrieval": 2115,
+        "generation": 1517,
+        "checks": 1767,
+        "grounding": 1766,
+        "alerts": 1,
+        "total": 8808
+      },
+      "retrieval_s": 2.115,
+      "llm_s": 6.692,
+      "hit": true,
+      "correct": true
+    },
+    {
+      "collection": "dossier_gharbi_salma",
+      "question": "Quel est son traitement de fond de l'asthme ?",
+      "in_scope": true,
+      "expected_page": 2,
+      "expected_terms": [
+        "budésonide"
+      ],
+      "refused": false,
+      "refused_by": null,
+      "pages": [
+        2,
+        1
+      ],
+      "latency_s": 12.25,
+      "answer": "Le traitement de fond de l’asthme est le budésonide/formotérol 200 µg/6 µg, deux inhalations le matin et le soir. [Page 2]",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": ""
+      },
+      "top_score": 0.2425,
+      "queries": [
+        "Quel est son traitement de fond de l'asthme?",
+        "Quel est son traitement de fond de l'asthme ?"
+      ],
+      "timings_ms": {
+        "rewrite": 4641,
+        "retrieval": 2625,
+        "generation": 1378,
+        "checks": 3602,
+        "grounding": 3599,
+        "alerts": 2,
+        "total": 12245
+      },
+      "retrieval_s": 2.625,
+      "llm_s": 9.618,
+      "hit": true,
+      "correct": true
+    },
+    {
+      "collection": "dossier_gharbi_salma",
+      "question": "Quel est le résultat de la spirométrie ?",
+      "in_scope": true,
+      "expected_page": 3,
+      "expected_terms": [
+        "78"
+      ],
+      "refused": false,
+      "refused_by": null,
+      "pages": [
+        3
+      ],
+      "latency_s": 9.13,
+      "answer": "Le résultat de la spirométrie indique un VEMS à 78 % de la valeur théorique. [Page 3]",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": ""
+      },
+      "top_score": 0.1577,
+      "queries": [
+        "Quel est le résultat de la spirométrie ?"
+      ],
+      "timings_ms": {
+        "rewrite": 2610,
+        "retrieval": 1437,
+        "generation": 1966,
+        "checks": 3113,
+        "grounding": 3111,
+        "alerts": 1,
+        "total": 9127
+      },
+      "retrieval_s": 1.437,
+      "llm_s": 7.687,
+      "hit": true,
+      "correct": true
+    },
+    {
+      "collection": "dossier_gharbi_salma",
+      "question": "Quelles sont ses allergies ?",
+      "in_scope": true,
+      "expected_page": 1,
+      "expected_terms": [
+        "acariens"
+      ],
+      "refused": false,
+      "refused_by": null,
+      "pages": [
+        1
+      ],
+      "latency_s": 4.92,
+      "answer": "Allergie aux acariens et aux poils de chat. [Page 1]",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": ""
+      },
+      "top_score": 0.1007,
+      "queries": [
+        "Quelles sont ses allergies ?"
+      ],
+      "timings_ms": {
+        "rewrite": 1391,
+        "retrieval": 1209,
+        "generation": 930,
+        "checks": 1387,
+        "grounding": 1386,
+        "alerts": 2,
+        "total": 4916
+      },
+      "retrieval_s": 1.209,
+      "llm_s": 3.707,
+      "hit": true,
+      "correct": true
+    },
+    {
+      "collection": "dossier_gharbi_salma",
+      "question": "Est-elle enceinte ?",
+      "in_scope": true,
+      "expected_page": 4,
+      "expected_terms": [
+        "20 semaines"
+      ],
+      "refused": false,
+      "refused_by": null,
+      "pages": [
+        4
+      ],
+      "latency_s": 5.85,
+      "answer": "Oui, elle est enceinte. [Page 4]",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": ""
+      },
+      "top_score": 0.0038,
+      "queries": [
+        "Est-elle enceinte?",
+        "Est-elle enceinte ?"
+      ],
+      "timings_ms": {
+        "rewrite": 719,
+        "retrieval": 2451,
+        "generation": 1633,
+        "checks": 1044,
+        "grounding": 1042,
+        "alerts": 1,
+        "total": 5846
+      },
+      "retrieval_s": 2.451,
+      "llm_s": 3.394,
+      "hit": true,
+      "correct": false
+    },
+    {
+      "collection": "dossier_gharbi_salma",
+      "question": "What is her rescue inhaler?",
+      "in_scope": true,
+      "expected_page": 2,
+      "expected_terms": [
+        "salbutamol"
+      ],
+      "refused": true,
+      "refused_by": "gate",
+      "pages": [],
+      "latency_s": 3.32,
+      "answer": "Information non trouvée dans les documents fournis.",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": "refused by relevance gate"
+      },
+      "top_score": 0.0012,
+      "queries": [
+        "Quel est son inhalateur de secours ?",
+        "What is her rescue inhaler?"
+      ],
+      "timings_ms": {
+        "rewrite": 732,
+        "retrieval": 2585,
+        "total": 3317
+      },
+      "retrieval_s": 2.585,
+      "llm_s": 0.732,
+      "hit": false,
+      "correct": false
+    },
+    {
+      "collection": "dossier_trabelsi_youssef",
+      "question": "Quels médicaments prend le patient ?",
+      "in_scope": true,
+      "expected_page": 2,
+      "expected_terms": [
+        "metformine"
+      ],
+      "refused": false,
+      "refused_by": null,
+      "pages": [
+        2,
+        3,
+        1
+      ],
+      "latency_s": 5.27,
+      "answer": "- Metformine 1000 mg le matin et le soir [Page 2]  \n- Ramipril 5 mg le matin [Page 2]  \n- Atorvastatine 20 mg le soir [Page 2]  \n- Sitagliptine 100 mg par jour [Page 3]",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": ""
+      },
+      "top_score": 0.1184,
+      "queries": [
+        "Quels médicaments prend le patient ?"
+      ],
+      "timings_ms": {
+        "rewrite": 585,
+        "retrieval": 1217,
+        "generation": 2078,
+        "checks": 1389,
+        "grounding": 1386,
+        "alerts": 3,
+        "total": 5269
+      },
+      "retrieval_s": 1.217,
+      "llm_s": 4.049,
+      "hit": true,
+      "correct": true
+    },
+    {
+      "collection": "dossier_trabelsi_youssef",
+      "question": "Quelle est la dernière HbA1c ?",
+      "in_scope": true,
+      "expected_page": 3,
+      "expected_terms": [
+        "8,1"
+      ],
+      "refused": false,
+      "refused_by": null,
+      "pages": [
+        3
+      ],
+      "latency_s": 8.99,
+      "answer": "La dernière HbA1c est de 8,1 % le 2 octobre 2026. [Page 3]",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": ""
+      },
+      "top_score": 0.1445,
+      "queries": [
+        "Quelle est la dernière HbA1c ?"
+      ],
+      "timings_ms": {
+        "rewrite": 2027,
+        "retrieval": 1238,
+        "generation": 3033,
+        "checks": 2695,
+        "grounding": 2693,
+        "alerts": 2,
+        "total": 8994
+      },
+      "retrieval_s": 1.238,
+      "llm_s": 7.753,
+      "hit": true,
+      "correct": true
+    },
+    {
+      "collection": "dossier_trabelsi_youssef",
+      "question": "A quoi est-il allergique ?",
+      "in_scope": true,
+      "expected_page": 1,
+      "expected_terms": [
+        "pénicilline"
+      ],
+      "refused": false,
+      "refused_by": null,
+      "pages": [
+        1
+      ],
+      "latency_s": 6.4,
+      "answer": "Il est allergique à la pénicilline (urticaire généralisée en 2012) [Page 1]",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": ""
+      },
+      "top_score": 0.0263,
+      "queries": [
+        "À quoi est-il allergique?",
+        "A quoi est-il allergique ?"
+      ],
+      "timings_ms": {
+        "rewrite": 691,
+        "retrieval": 2512,
+        "generation": 1832,
+        "checks": 1368,
+        "grounding": 1367,
+        "alerts": 1,
+        "total": 6403
+      },
+      "retrieval_s": 2.512,
+      "llm_s": 3.89,
+      "hit": true,
+      "correct": true
+    },
+    {
+      "collection": "dossier_trabelsi_youssef",
+      "question": "Quel médicament a été ajouté ?",
+      "in_scope": true,
+      "expected_page": 3,
+      "expected_terms": [
+        "sitagliptine"
+      ],
+      "refused": false,
+      "refused_by": null,
+      "pages": [
+        3,
+        2
+      ],
+      "latency_s": 7.65,
+      "answer": "La sitagliptine a été ajoutée. [Page 3]",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": ""
+      },
+      "top_score": 0.0722,
+      "queries": [
+        "Quel médicament a été ajouté?",
+        "Quel médicament a été ajouté ?"
+      ],
+      "timings_ms": {
+        "rewrite": 1698,
+        "retrieval": 2510,
+        "generation": 807,
+        "checks": 2638,
+        "grounding": 2635,
+        "alerts": 4,
+        "total": 7653
+      },
+      "retrieval_s": 2.51,
+      "llm_s": 5.14,
+      "hit": true,
+      "correct": true
+    },
+    {
+      "collection": "dossier_trabelsi_youssef",
+      "question": "Y a-t-il une rétinopathie ?",
+      "in_scope": true,
+      "expected_page": 4,
+      "expected_terms": [
+        [
+          "sans rétinopathie",
+          "pas de rétinopathie",
+          "aucune rétinopathie"
+        ]
+      ],
+      "refused": false,
+      "refused_by": null,
+      "pages": [
+        4
+      ],
+      "latency_s": 4.01,
+      "answer": "Non, il n’y a pas de rétinopathie diabétique. [Page 4]",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": ""
+      },
+      "top_score": 0.2361,
+      "queries": [
+        "Y a-t-il une rétinopathie ?"
+      ],
+      "timings_ms": {
+        "rewrite": 483,
+        "retrieval": 1253,
+        "generation": 1657,
+        "checks": 612,
+        "grounding": 611,
+        "alerts": 1,
+        "total": 4005
+      },
+      "retrieval_s": 1.253,
+      "llm_s": 2.751,
+      "hit": true,
+      "correct": true
+    },
+    {
+      "collection": "dossier_trabelsi_youssef",
+      "question": "ما هي جرعة الميتفورمين؟",
+      "in_scope": true,
+      "expected_page": 2,
+      "expected_terms": [
+        "1000"
+      ],
+      "refused": false,
+      "refused_by": null,
+      "pages": [
+        2
+      ],
+      "latency_s": 5.63,
+      "answer": "جرعة الميتفورمين هي 1000 مغ مرتين يوميًا (صباحًا ومساءً) [Page 2]",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": ""
+      },
+      "top_score": 0.4925,
+      "queries": [
+        "Quelle est la dose de metformine ?",
+        "ما هي جرعة الميتفورمين؟"
+      ],
+      "timings_ms": {
+        "rewrite": 1192,
+        "retrieval": 2652,
+        "generation": 1113,
+        "checks": 675,
+        "grounding": 674,
+        "alerts": 1,
+        "total": 5632
+      },
+      "retrieval_s": 2.652,
+      "llm_s": 2.979,
+      "hit": true,
+      "correct": true
+    },
+    {
+      "collection": "dossier_mansour_lina",
+      "question": "Quel antiépileptique prend l'enfant ?",
+      "in_scope": true,
+      "expected_page": 2,
+      "expected_terms": [
+        "valproate"
+      ],
+      "refused": false,
+      "refused_by": null,
+      "pages": [
+        2
+      ],
+      "latency_s": 3.9,
+      "answer": "L'enfant prend du valproate de sodium. [Page 2]",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": ""
+      },
+      "top_score": 0.0238,
+      "queries": [
+        "Quel antiépileptique prend l'enfant?",
+        "Quel antiépileptique prend l'enfant ?"
+      ],
+      "timings_ms": {
+        "rewrite": 1204,
+        "retrieval": 1574,
+        "generation": 586,
+        "checks": 531,
+        "grounding": 530,
+        "alerts": 1,
+        "total": 3895
+      },
+      "retrieval_s": 1.574,
+      "llm_s": 2.32,
+      "hit": true,
+      "correct": true
+    },
+    {
+      "collection": "dossier_mansour_lina",
+      "question": "Quels médicaments sont contre-indiqués ?",
+      "in_scope": true,
+      "expected_page": 2,
+      "expected_terms": [
+        "aspirine"
+      ],
+      "refused": false,
+      "refused_by": null,
+      "pages": [
+        2
+      ],
+      "latency_s": 4.49,
+      "answer": "L’aspirine est contre‑indiquée chez l’enfant sous valproate. [Page 2]",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": ""
+      },
+      "top_score": 0.0244,
+      "queries": [
+        "Quels médicaments sont contre-indiqués ?"
+      ],
+      "timings_ms": {
+        "rewrite": 1354,
+        "retrieval": 740,
+        "generation": 1448,
+        "checks": 949,
+        "grounding": 947,
+        "alerts": 1,
+        "total": 4490
+      },
+      "retrieval_s": 0.74,
+      "llm_s": 3.749,
+      "hit": true,
+      "correct": true
+    },
+    {
+      "collection": "dossier_mansour_lina",
+      "question": "Quel est le résultat du dernier EEG ?",
+      "in_scope": true,
+      "expected_page": 3,
+      "expected_terms": [
+        "diminution"
+      ],
+      "refused": false,
+      "refused_by": null,
+      "pages": [
+        3
+      ],
+      "latency_s": 3.68,
+      "answer": "Le dernier EEG du 15 août 2026 montre une nette diminution des pointes‑ondes. [Page 3]",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": ""
+      },
+      "top_score": 0.0175,
+      "queries": [
+        "Quel est le résultat du dernier EEG ?"
+      ],
+      "timings_ms": {
+        "rewrite": 865,
+        "retrieval": 728,
+        "generation": 1004,
+        "checks": 1083,
+        "grounding": 1082,
+        "alerts": 1,
+        "total": 3680
+      },
+      "retrieval_s": 0.728,
+      "llm_s": 2.951,
+      "hit": true,
+      "correct": true
+    },
+    {
+      "collection": "dossier_ben_amor_hedi",
+      "question": "Qui a gagné la Coupe du monde 2022 ?",
+      "in_scope": false,
+      "refused": true,
+      "refused_by": "gate",
+      "pages": [],
+      "latency_s": 3.81,
+      "answer": "Information non trouvée dans les documents fournis.",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": "refused by relevance gate"
+      },
+      "top_score": 0.0,
+      "queries": [
+        "Qui a gagné la Coupe du monde 2022?",
+        "Qui a gagné la Coupe du monde 2022 ?"
+      ],
+      "timings_ms": {
+        "rewrite": 1878,
+        "retrieval": 1931,
+        "total": 3809
+      },
+      "retrieval_s": 1.931,
+      "llm_s": 1.878
+    },
+    {
+      "collection": "dossier_ben_amor_hedi",
+      "question": "Quelle est la valeur de la dernière HbA1c ?",
+      "in_scope": false,
+      "refused": true,
+      "refused_by": "gate",
+      "pages": [],
+      "latency_s": 1.76,
+      "answer": "Information non trouvée dans les documents fournis.",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": "refused by relevance gate"
+      },
+      "top_score": 0.0015,
+      "queries": [
+        "Quelle est la valeur de la dernière HbA1c ?"
+      ],
+      "timings_ms": {
+        "rewrite": 724,
+        "retrieval": 1038,
+        "total": 1763
+      },
+      "retrieval_s": 1.038,
+      "llm_s": 0.724
+    },
+    {
+      "collection": "dossier_ben_amor_hedi",
+      "question": "Le patient est-il vacciné contre la grippe ?",
+      "in_scope": false,
+      "refused": true,
+      "refused_by": "gate",
+      "pages": [],
+      "latency_s": 2.02,
+      "answer": "Information non trouvée dans les documents fournis.",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": "refused by relevance gate"
+      },
+      "top_score": 0.0032,
+      "queries": [
+        "Le patient est-il vacciné contre la grippe ?"
+      ],
+      "timings_ms": {
+        "rewrite": 1003,
+        "retrieval": 1016,
+        "total": 2019
+      },
+      "retrieval_s": 1.016,
+      "llm_s": 1.003
+    },
+    {
+      "collection": "dossier_gharbi_salma",
+      "question": "Donne-moi une recette de couscous.",
+      "in_scope": false,
+      "refused": true,
+      "refused_by": "gate",
+      "pages": [],
+      "latency_s": 4.45,
+      "answer": "Information non trouvée dans les documents fournis.",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": "refused by relevance gate"
+      },
+      "top_score": 0.0,
+      "queries": [
+        "Peux‑tu me donner une recette de couscous?",
+        "Donne-moi une recette de couscous."
+      ],
+      "timings_ms": {
+        "rewrite": 1871,
+        "retrieval": 2578,
+        "total": 4449
+      },
+      "retrieval_s": 2.578,
+      "llm_s": 1.871
+    },
+    {
+      "collection": "dossier_gharbi_salma",
+      "question": "Quelle est la dose de metformine ?",
+      "in_scope": false,
+      "refused": true,
+      "refused_by": "gate",
+      "pages": [],
+      "latency_s": 4.25,
+      "answer": "Information non trouvée dans les documents fournis.",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": "refused by relevance gate"
+      },
+      "top_score": 0.0018,
+      "queries": [
+        "Quelle est la dose de metformine ?"
+      ],
+      "timings_ms": {
+        "rewrite": 3014,
+        "retrieval": 1234,
+        "total": 4247
+      },
+      "retrieval_s": 1.234,
+      "llm_s": 3.014
+    },
+    {
+      "collection": "dossier_gharbi_salma",
+      "question": "Quel est son taux de cholestérol ?",
+      "in_scope": false,
+      "refused": true,
+      "refused_by": "gate",
+      "pages": [],
+      "latency_s": 3.33,
+      "answer": "Information non trouvée dans les documents fournis.",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": "refused by relevance gate"
+      },
+      "top_score": 0.0005,
+      "queries": [
+        "Quel est son taux de cholestérol?",
+        "Quel est son taux de cholestérol ?"
+      ],
+      "timings_ms": {
+        "rewrite": 777,
+        "retrieval": 2554,
+        "total": 3332
+      },
+      "retrieval_s": 2.554,
+      "llm_s": 0.777
+    },
+    {
+      "collection": "dossier_trabelsi_youssef",
+      "question": "Quel est le résultat de l'EEG ?",
+      "in_scope": false,
+      "refused": true,
+      "refused_by": "gate",
+      "pages": [],
+      "latency_s": 2.7,
+      "answer": "Information non trouvée dans les documents fournis.",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": "refused by relevance gate"
+      },
+      "top_score": 0.0019,
+      "queries": [
+        "Quel est le résultat de l'EEG ?"
+      ],
+      "timings_ms": {
+        "rewrite": 1464,
+        "retrieval": 1233,
+        "total": 2698
+      },
+      "retrieval_s": 1.233,
+      "llm_s": 1.464
+    },
+    {
+      "collection": "dossier_trabelsi_youssef",
+      "question": "Comment installer Python sur Windows ?",
+      "in_scope": false,
+      "refused": true,
+      "refused_by": "gate",
+      "pages": [],
+      "latency_s": 1.96,
+      "answer": "Information non trouvée dans les documents fournis.",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": "refused by relevance gate"
+      },
+      "top_score": 0.0,
+      "queries": [
+        "Comment installer Python sur Windows ?"
+      ],
+      "timings_ms": {
+        "rewrite": 768,
+        "retrieval": 1195,
+        "total": 1963
+      },
+      "retrieval_s": 1.195,
+      "llm_s": 0.768
+    },
+    {
+      "collection": "dossier_trabelsi_youssef",
+      "question": "What is the capital of Canada?",
+      "in_scope": false,
+      "refused": true,
+      "refused_by": "gate",
+      "pages": [],
+      "latency_s": 4.8,
+      "answer": "Information non trouvée dans les documents fournis.",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": "refused by relevance gate"
+      },
+      "top_score": 0.0,
+      "queries": [
+        "Quelle est la capitale du Canada?",
+        "What is the capital of Canada?"
+      ],
+      "timings_ms": {
+        "rewrite": 2275,
+        "retrieval": 2524,
+        "total": 4799
+      },
+      "retrieval_s": 2.524,
+      "llm_s": 2.275
+    },
+    {
+      "collection": "dossier_mansour_lina",
+      "question": "Quelle est la dose de warfarine ?",
+      "in_scope": false,
+      "refused": true,
+      "refused_by": "gate",
+      "pages": [],
+      "latency_s": 1.17,
+      "answer": "Information non trouvée dans les documents fournis.",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": "refused by relevance gate"
+      },
+      "top_score": 0.0014,
+      "queries": [
+        "Quelle est la dose de warfarine ?"
+      ],
+      "timings_ms": {
+        "rewrite": 439,
+        "retrieval": 730,
+        "total": 1169
+      },
+      "retrieval_s": 0.73,
+      "llm_s": 0.439
+    },
+    {
+      "collection": "dossier_mansour_lina",
+      "question": "Quel est le prix d'un iPhone ?",
+      "in_scope": false,
+      "refused": true,
+      "refused_by": "gate",
+      "pages": [],
+      "latency_s": 1.58,
+      "answer": "Information non trouvée dans les documents fournis.",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": "refused by relevance gate"
+      },
+      "top_score": 0.0,
+      "queries": [
+        "Quel est le prix d'un iPhone ?"
+      ],
+      "timings_ms": {
+        "rewrite": 846,
+        "retrieval": 738,
+        "total": 1584
+      },
+      "retrieval_s": 0.738,
+      "llm_s": 0.846
+    },
+    {
+      "collection": "dossier_mansour_lina",
+      "question": "Quel est son résultat de spirométrie ?",
+      "in_scope": false,
+      "refused": true,
+      "refused_by": "gate",
+      "pages": [],
+      "latency_s": 1.41,
+      "answer": "Information non trouvée dans les documents fournis.",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": "refused by relevance gate"
+      },
+      "top_score": 0.0003,
+      "queries": [
+        "Quel est son résultat de spirométrie ?"
+      ],
+      "timings_ms": {
+        "rewrite": 657,
+        "retrieval": 756,
+        "total": 1414
+      },
+      "retrieval_s": 0.756,
+      "llm_s": 0.657
+    }
+  ]
+}

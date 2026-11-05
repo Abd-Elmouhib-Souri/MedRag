@@ -1,0 +1,699 @@
+{
+  "settings": {
+    "llm": "openai/gpt-oss-120b",
+    "llm_fast": "openai/gpt-oss-20b",
+    "reranker": "BAAI/bge-reranker-v2-m3",
+    "threshold": 0.0034,
+    "embeddings": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+    "chunk_size": 600,
+    "drug_class_expansion": true,
+    "machine": {
+      "os": "Windows 11",
+      "cpu": "13th Gen Intel(R) Core(TM) i5-13450HX",
+      "logical_cores": 16,
+      "ram_gb": 39.7,
+      "device": "CPU only",
+      "python": "3.11.17",
+      "torch": "2.14.1+cpu"
+    }
+  },
+  "metrics": {
+    "questions": 17,
+    "in_scope": 11,
+    "out_of_scope": 6,
+    "retrieval_hit_at_5": 1.0,
+    "answer_accuracy": 0.909,
+    "false_refusal_rate": 0.091,
+    "out_of_scope_refusal_rate": 1.0,
+    "out_of_scope_refused_by_gate": 0.667,
+    "out_of_scope_refused_by_llm": 0.333,
+    "grounded_answer_rate": 1.0,
+    "latency_p50_s": 6.54,
+    "latency_p95_s": 8.44,
+    "retrieval_p50_s": 3.03,
+    "retrieval_p95_s": 4.39,
+    "llm_p50_s": 2.72,
+    "llm_p95_s": 4.83,
+    "answered_latency_p50_s": 6.77
+  },
+  "rows": [
+    {
+      "collection": "dossier_ben_amor_hedi",
+      "question": "Prend-il un antivitamine K ? Lequel ?",
+      "in_scope": true,
+      "expected_page": 2,
+      "expected_terms": [
+        "warfarine"
+      ],
+      "refused": false,
+      "refused_by": null,
+      "pages": [
+        3,
+        2
+      ],
+      "latency_s": 6.82,
+      "answer": "Oui, il prend de la warfarine, un antivitamine K. [Page 2]",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": ""
+      },
+      "top_score": 0.0274,
+      "queries": [
+        "Prend-il un antivitamine K ? Lequel ?",
+        "Prend-il un antivitamine K ? Lequel ?",
+        "Prend-il un antivitamine K ? Lequel ? Molécules possibles : warfarine, acénocoumarol, fluindione."
+      ],
+      "timings_ms": {
+        "rewrite": 1544,
+        "retrieval": 3364,
+        "generation": 1252,
+        "checks": 662,
+        "grounding": 656,
+        "alerts": 6,
+        "total": 6822
+      },
+      "retrieval_s": 3.364,
+      "llm_s": 3.452,
+      "hit": true,
+      "correct": true
+    },
+    {
+      "collection": "dossier_ben_amor_hedi",
+      "question": "ما هو الدواء المضاد للتخثر الذي يتناوله؟",
+      "in_scope": true,
+      "expected_page": 2,
+      "expected_terms": [
+        [
+          "warfarine",
+          "warfarin",
+          "وارفارين"
+        ]
+      ],
+      "refused": false,
+      "refused_by": null,
+      "pages": [
+        3,
+        2
+      ],
+      "latency_s": 8.44,
+      "answer": "الدواء المضاد للتخثر هو الوارفارين. [Page 2]",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": ""
+      },
+      "top_score": 0.0518,
+      "queries": [
+        "Quel médicament anticoagulant prend-il ou elle?",
+        "ما هو الدواء المضاد للتخثر الذي يتناوله؟",
+        "Quel médicament anticoagulant prend-il ou elle? Molécules possibles : warfarine, acénocoumarol, fluindione, apixaban, rivaroxaban, dabigatran, édoxaban, héparine, énoxaparine, tinzaparine."
+      ],
+      "timings_ms": {
+        "rewrite": 2951,
+        "retrieval": 3609,
+        "generation": 873,
+        "checks": 1006,
+        "grounding": 1004,
+        "alerts": 2,
+        "total": 8440
+      },
+      "retrieval_s": 3.609,
+      "llm_s": 4.828,
+      "hit": true,
+      "correct": true
+    },
+    {
+      "collection": "dossier_gharbi_salma",
+      "question": "Quel corticoïde inhalé utilise-t-elle ?",
+      "in_scope": true,
+      "expected_page": 2,
+      "expected_terms": [
+        "budésonide"
+      ],
+      "refused": false,
+      "refused_by": null,
+      "pages": [
+        2,
+        3
+      ],
+      "latency_s": 7.0,
+      "answer": "Elle utilise le budésonide (en association avec le formotérol) [Page 2]",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": ""
+      },
+      "top_score": 0.0515,
+      "queries": [
+        "Quel corticoïde inhalé utilise-t-elle?",
+        "Quel corticoïde inhalé utilise-t-elle ?",
+        "Quel corticoïde inhalé utilise-t-elle? Molécules possibles : budésonide, béclométasone, fluticasone."
+      ],
+      "timings_ms": {
+        "rewrite": 660,
+        "retrieval": 4200,
+        "generation": 1138,
+        "checks": 1004,
+        "grounding": 1002,
+        "alerts": 2,
+        "total": 7001
+      },
+      "retrieval_s": 4.2,
+      "llm_s": 2.8,
+      "hit": true,
+      "correct": true
+    },
+    {
+      "collection": "dossier_gharbi_salma",
+      "question": "Quel bronchodilatateur d'action rapide a-t-elle en cas de crise ?",
+      "in_scope": true,
+      "expected_page": 2,
+      "expected_terms": [
+        "salbutamol"
+      ],
+      "refused": false,
+      "refused_by": null,
+      "pages": [
+        2
+      ],
+      "latency_s": 7.12,
+      "answer": "Le bronchodilatateur d'action rapide indiqué en cas de crise est le salbutamol 100 µg, deux bouffées en cas de gêne respiratoire. [Page 2]",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": ""
+      },
+      "top_score": 0.2388,
+      "queries": [
+        "Quel bronchodilatateur d'action rapide a-t-elle en cas de crise?",
+        "Quel bronchodilatateur d'action rapide a-t-elle en cas de crise ?",
+        "Quel bronchodilatateur d'action rapide a-t-elle en cas de crise? Molécules possibles : salbutamol, terbutaline, formotérol, salmétérol, tiotropium."
+      ],
+      "timings_ms": {
+        "rewrite": 1244,
+        "retrieval": 4391,
+        "generation": 725,
+        "checks": 756,
+        "grounding": 755,
+        "alerts": 1,
+        "total": 7116
+      },
+      "retrieval_s": 4.391,
+      "llm_s": 2.724,
+      "hit": true,
+      "correct": true
+    },
+    {
+      "collection": "dossier_gharbi_salma",
+      "question": "Quel bêta-2 agoniste de longue durée d'action reçoit-elle ?",
+      "in_scope": true,
+      "expected_page": 2,
+      "expected_terms": [
+        "formotérol"
+      ],
+      "refused": true,
+      "refused_by": "llm",
+      "pages": [
+        2,
+        3
+      ],
+      "latency_s": 6.54,
+      "answer": "Information non trouvée dans les documents fournis.",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": "refusal"
+      },
+      "top_score": 0.0456,
+      "queries": [
+        "Quel bêta-2 agoniste de longue durée d'action reçoit-elle ?",
+        "Quel bêta-2 agoniste de longue durée d'action reçoit-elle ? Molécules possibles : salbutamol, terbutaline, formotérol, salmétérol."
+      ],
+      "timings_ms": {
+        "rewrite": 2836,
+        "retrieval": 3016,
+        "generation": 686,
+        "checks": 2,
+        "grounding": 0,
+        "alerts": 2,
+        "total": 6540
+      },
+      "retrieval_s": 3.016,
+      "llm_s": 3.522,
+      "hit": true,
+      "correct": false
+    },
+    {
+      "collection": "dossier_trabelsi_youssef",
+      "question": "Quel IEC prend-il ?",
+      "in_scope": true,
+      "expected_page": 2,
+      "expected_terms": [
+        "ramipril"
+      ],
+      "refused": false,
+      "refused_by": null,
+      "pages": [
+        2
+      ],
+      "latency_s": 6.5,
+      "answer": "Il prend du ramipril 5 mg le matin. [Page 2]",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": ""
+      },
+      "top_score": 0.0119,
+      "queries": [
+        "Quel IEC prend-il ?",
+        "Quel IEC prend-il ? Molécules possibles : ramipril, périndopril, énalapril, lisinopril, captopril."
+      ],
+      "timings_ms": {
+        "rewrite": 908,
+        "retrieval": 2806,
+        "generation": 819,
+        "checks": 1967,
+        "grounding": 1966,
+        "alerts": 1,
+        "total": 6500
+      },
+      "retrieval_s": 2.806,
+      "llm_s": 3.693,
+      "hit": true,
+      "correct": true
+    },
+    {
+      "collection": "dossier_trabelsi_youssef",
+      "question": "Which ACE inhibitor is he taking?",
+      "in_scope": true,
+      "expected_page": 2,
+      "expected_terms": [
+        "ramipril"
+      ],
+      "refused": false,
+      "refused_by": null,
+      "pages": [
+        2,
+        3
+      ],
+      "latency_s": 6.77,
+      "answer": "He is taking ramipril. [Page 2]",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": ""
+      },
+      "top_score": 0.0241,
+      "queries": [
+        "Quel inhibiteur de l'enzyme de conversion de l'angiotensine (ACE) prend-il ?",
+        "Which ACE inhibitor is he taking?",
+        "Quel inhibiteur de l'enzyme de conversion de l'angiotensine (ACE) prend-il ? Molécules possibles : ramipril, périndopril, énalapril, lisinopril, captopril."
+      ],
+      "timings_ms": {
+        "rewrite": 877,
+        "retrieval": 4351,
+        "generation": 1028,
+        "checks": 516,
+        "grounding": 514,
+        "alerts": 2,
+        "total": 6772
+      },
+      "retrieval_s": 4.351,
+      "llm_s": 2.419,
+      "hit": true,
+      "correct": true
+    },
+    {
+      "collection": "dossier_trabelsi_youssef",
+      "question": "Quelle est la dose de son biguanide ?",
+      "in_scope": true,
+      "expected_page": 2,
+      "expected_terms": [
+        "1000"
+      ],
+      "refused": false,
+      "refused_by": null,
+      "pages": [
+        2
+      ],
+      "latency_s": 4.82,
+      "answer": "La metformine (biguanide) est prescrite à 1000 mg le matin et 1000 mg le soir. [Page 2]",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": ""
+      },
+      "top_score": 0.0234,
+      "queries": [
+        "Quelle est la dose de son biguanide ?",
+        "Quelle est la dose de son biguanide ? Molécules possibles : metformine."
+      ],
+      "timings_ms": {
+        "rewrite": 737,
+        "retrieval": 2677,
+        "generation": 815,
+        "checks": 589,
+        "grounding": 588,
+        "alerts": 2,
+        "total": 4818
+      },
+      "retrieval_s": 2.677,
+      "llm_s": 2.14,
+      "hit": true,
+      "correct": true
+    },
+    {
+      "collection": "dossier_trabelsi_youssef",
+      "question": "Quelle gliptine a été ajoutée à son traitement ?",
+      "in_scope": true,
+      "expected_page": 3,
+      "expected_terms": [
+        "sitagliptine"
+      ],
+      "refused": false,
+      "refused_by": null,
+      "pages": [
+        3,
+        2
+      ],
+      "latency_s": 7.8,
+      "answer": "La sitagliptine a été ajoutée à son traitement. [Page 3]",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": ""
+      },
+      "top_score": 0.0423,
+      "queries": [
+        "Quelle gliptine a été ajoutée à son traitement?",
+        "Quelle gliptine a été ajoutée à son traitement ?",
+        "Quelle gliptine a été ajoutée à son traitement? Molécules possibles : sitagliptine, vildagliptine, saxagliptine, linagliptine."
+      ],
+      "timings_ms": {
+        "rewrite": 1661,
+        "retrieval": 4187,
+        "generation": 1097,
+        "checks": 859,
+        "grounding": 857,
+        "alerts": 2,
+        "total": 7803
+      },
+      "retrieval_s": 4.187,
+      "llm_s": 3.615,
+      "hit": true,
+      "correct": true
+    },
+    {
+      "collection": "dossier_trabelsi_youssef",
+      "question": "Quel inhibiteur de la DPP-4 lui a été prescrit ?",
+      "in_scope": true,
+      "expected_page": 3,
+      "expected_terms": [
+        "sitagliptine"
+      ],
+      "refused": false,
+      "refused_by": null,
+      "pages": [
+        3,
+        2
+      ],
+      "latency_s": 6.71,
+      "answer": "Il a reçu la sitagliptine 100 mg par jour. [Page 3]",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": ""
+      },
+      "top_score": 0.026,
+      "queries": [
+        "Quel inhibiteur de la DPP-4 lui a été prescrit ?",
+        "Quel inhibiteur de la DPP-4 lui a été prescrit ? Molécules possibles : sitagliptine, vildagliptine, saxagliptine, linagliptine."
+      ],
+      "timings_ms": {
+        "rewrite": 1958,
+        "retrieval": 3001,
+        "generation": 681,
+        "checks": 1074,
+        "grounding": 1072,
+        "alerts": 2,
+        "total": 6713
+      },
+      "retrieval_s": 3.001,
+      "llm_s": 3.711,
+      "hit": true,
+      "correct": true
+    },
+    {
+      "collection": "dossier_mansour_lina",
+      "question": "Quelle est la posologie de son anticonvulsivant ?",
+      "in_scope": true,
+      "expected_page": 2,
+      "expected_terms": [
+        "300"
+      ],
+      "refused": false,
+      "refused_by": null,
+      "pages": [
+        2
+      ],
+      "latency_s": 5.18,
+      "answer": "Valproate de sodium 300 mg deux fois par jour. [Page 2]",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": ""
+      },
+      "top_score": 0.0152,
+      "queries": [
+        "Quelle est la posologie de son anticonvulsivant ?",
+        "Quelle est la posologie de son anticonvulsivant ? Molécules possibles : valproate, lévétiracétam, lamotrigine, carbamazépine, éthosuximide, topiramate."
+      ],
+      "timings_ms": {
+        "rewrite": 1692,
+        "retrieval": 2069,
+        "generation": 702,
+        "checks": 722,
+        "grounding": 720,
+        "alerts": 1,
+        "total": 5184
+      },
+      "retrieval_s": 2.069,
+      "llm_s": 3.114,
+      "hit": true,
+      "correct": true
+    },
+    {
+      "collection": "dossier_gharbi_salma",
+      "question": "Quel anticoagulant prend-elle ?",
+      "in_scope": false,
+      "refused": true,
+      "refused_by": "gate",
+      "pages": [],
+      "latency_s": 3.51,
+      "answer": "Information non trouvée dans les documents fournis.",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": "refused by relevance gate"
+      },
+      "top_score": 0.0021,
+      "queries": [
+        "Quel anticoagulant prend-elle ?",
+        "Quel anticoagulant prend-elle ? Molécules possibles : warfarine, acénocoumarol, fluindione, apixaban, rivaroxaban, dabigatran, édoxaban, héparine, énoxaparine, tinzaparine."
+      ],
+      "timings_ms": {
+        "rewrite": 477,
+        "retrieval": 3032,
+        "total": 3509
+      },
+      "retrieval_s": 3.032,
+      "llm_s": 0.477
+    },
+    {
+      "collection": "dossier_mansour_lina",
+      "question": "Quelle statine prend l'enfant ?",
+      "in_scope": false,
+      "refused": true,
+      "refused_by": "llm",
+      "pages": [
+        2
+      ],
+      "latency_s": 4.61,
+      "answer": "Information non trouvée dans les documents fournis.",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": "refusal"
+      },
+      "top_score": 0.0144,
+      "queries": [
+        "Quelle statine l'enfant prend-il?",
+        "Quelle statine prend l'enfant ?",
+        "Quelle statine l'enfant prend-il? Molécules possibles : atorvastatine, rosuvastatine, simvastatine, pravastatine, fluvastatine."
+      ],
+      "timings_ms": {
+        "rewrite": 1084,
+        "retrieval": 2600,
+        "generation": 923,
+        "checks": 2,
+        "grounding": 0,
+        "alerts": 2,
+        "total": 4610
+      },
+      "retrieval_s": 2.6,
+      "llm_s": 2.007
+    },
+    {
+      "collection": "dossier_ben_amor_hedi",
+      "question": "Quel IEC prend-il ?",
+      "in_scope": false,
+      "refused": true,
+      "refused_by": "gate",
+      "pages": [],
+      "latency_s": 2.79,
+      "answer": "Information non trouvée dans les documents fournis.",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": "refused by relevance gate"
+      },
+      "top_score": 0.0027,
+      "queries": [
+        "Quel IEC prend-il ?",
+        "Quel IEC prend-il ? Molécules possibles : ramipril, périndopril, énalapril, lisinopril, captopril."
+      ],
+      "timings_ms": {
+        "rewrite": 555,
+        "retrieval": 2230,
+        "total": 2785
+      },
+      "retrieval_s": 2.23,
+      "llm_s": 0.555
+    },
+    {
+      "collection": "dossier_trabelsi_youssef",
+      "question": "Quel bêtabloquant prend-il ?",
+      "in_scope": false,
+      "refused": true,
+      "refused_by": "llm",
+      "pages": [
+        2,
+        3
+      ],
+      "latency_s": 6.74,
+      "answer": "Information non trouvée dans les documents fournis.",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": "refusal"
+      },
+      "top_score": 0.006,
+      "queries": [
+        "Quel bêtabloquant prend-il?",
+        "Quel bêtabloquant prend-il ?",
+        "Quel bêtabloquant prend-il? Molécules possibles : bisoprolol, aténolol, métoprolol, propranolol, nébivolol, carvédilol, acébutolol."
+      ],
+      "timings_ms": {
+        "rewrite": 614,
+        "retrieval": 4272,
+        "generation": 1851,
+        "checks": 2,
+        "grounding": 0,
+        "alerts": 2,
+        "total": 6739
+      },
+      "retrieval_s": 4.272,
+      "llm_s": 2.465
+    },
+    {
+      "collection": "dossier_gharbi_salma",
+      "question": "Quel antidiabétique prend-elle ?",
+      "in_scope": false,
+      "refused": true,
+      "refused_by": "gate",
+      "pages": [],
+      "latency_s": 4.46,
+      "answer": "Information non trouvée dans les documents fournis.",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": "refused by relevance gate"
+      },
+      "top_score": 0.0026,
+      "queries": [
+        "Quel antidiabétique prend-elle ?",
+        "Quel antidiabétique prend-elle ? Molécules possibles : metformine, sitagliptine, vildagliptine, saxagliptine, linagliptine, gliclazide, glimépiride, glibenclamide, empagliflozine, dapagliflozine, canagliflozine, liraglutide, dulaglutide, sémaglutide, insuline."
+      ],
+      "timings_ms": {
+        "rewrite": 1165,
+        "retrieval": 3293,
+        "total": 4457
+      },
+      "retrieval_s": 3.293,
+      "llm_s": 1.165
+    },
+    {
+      "collection": "dossier_mansour_lina",
+      "question": "Which beta blocker is she taking?",
+      "in_scope": false,
+      "refused": true,
+      "refused_by": "gate",
+      "pages": [],
+      "latency_s": 3.64,
+      "answer": "Information non trouvée dans les documents fournis.",
+      "grounding": {
+        "checked": true,
+        "grounded": true,
+        "score": 1.0,
+        "unsupported": [],
+        "note": "refused by relevance gate"
+      },
+      "top_score": 0.0013,
+      "queries": [
+        "Quel bêta-bloquant prend-elle ?",
+        "Which beta blocker is she taking?",
+        "Quel bêta-bloquant prend-elle ? Molécules possibles : bisoprolol, aténolol, métoprolol, propranolol, nébivolol, carvédilol, acébutolol."
+      ],
+      "timings_ms": {
+        "rewrite": 654,
+        "retrieval": 2987,
+        "total": 3641
+      },
+      "retrieval_s": 2.987,
+      "llm_s": 0.654
+    }
+  ]
+}

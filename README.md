@@ -19,7 +19,7 @@ Ask questions about patient records in French, English or Arabic. MedRAG answers
 
 ## Results (held-out test set)
 
-Measured with `scripts/evaluate.py` on questions that were **never used to tune the system** (dev/test split, one run). 95% confidence intervals are Wilson intervals: the benchmark is small, so they are wide.
+Measured with `scripts/evaluate.py` on questions that were **never used to tune the system** (dev/test split, one run, commit `37c22c8`, drug-class expansion not yet added). 95% confidence intervals are Wilson intervals: the benchmark is small, so they are wide.
 
 | Metric | Test set (19 questions) | 95% CI |
 |---|---|---|
@@ -31,9 +31,45 @@ Measured with `scripts/evaluate.py` on questions that were **never used to tune 
 | Retrieval hit@5 (right page among sources) | 90.9% | |
 | Latency p50 / p95 (laptop CPU + Groq free tier) | 5.4 s / 20.0 s | |
 
-Dev set (32 questions, used for tuning): 95% accuracy, 100% refusal, 0 unanswerable answered, 100% grounded, p50 3.7 s. The p95 latency is dominated by Groq free-tier rate-limit retries.
+Dev set (32 questions, used for tuning): 95% accuracy on 24 Oct and 90% on the two 5 Nov re-runs (*"Est-elle enceinte ?"* scores 0.0038, just above the 0.0034 threshold, and the LLM's wording varies between runs), 100% refusal, 0 unanswerable answered, 100% grounded. The p95 latency is dominated by Groq free-tier rate-limit retries.
 
 Questions cover French, English, Arabic and typos; unanswerable ones include off-topic questions and **facts that belong to another patient** (the hard case). One record hides a prompt-injection attack, which is quarantined at ingestion. Full outputs: [`eval/RESULTS_test.md`](eval/RESULTS_test.md), [`eval/results_test.json`](eval/results_test.json).
+
+### Latency and corpus size (measured 5 Nov 2026)
+
+End-to-end time per question on the 32 dev questions (nearest-rank percentiles; model loading and the pause between questions excluded; no Groq rate-limit retry occurred in this run):
+
+| | p50 | p95 |
+|---|---|---|
+| **End to end** | **4.25 s** | **9.13 s** |
+| Search: ChromaDB + BM25 + bge reranker (local CPU) | 1.25 s | 2.62 s |
+| LLM: rewrite + answer + grounding judge (Groq API, network included) | 2.75 s | 7.75 s |
+
+Machine: Intel Core i5-13450HX (16 logical cores), 39.7 GB RAM, **CPU only (no GPU)**, Windows 11, Python 3.11, torch 2.14.1+cpu. LLMs: `openai/gpt-oss-120b` (answer) and `openai/gpt-oss-20b` (rewrite, judge) on Groq. Answered questions alone: p50 5.48 s (refused ones skip the answer and the judge). Full output: [`eval/RESULTS_dev_latency.md`](eval/RESULTS_dev_latency.md).
+
+Indexed corpus (`python -m scripts.corpus_stats`; document = one PDF, page = a page that produced at least one chunk, chunk = 600 characters):
+
+| Index | Documents | Pages | Chunks |
+|---|---|---|---|
+| Demo (`data/chroma_db`, screenshot above) | 1 | 4 | 4 |
+| Evaluation (`eval/chroma_db`) | 4 | 15 | 15 (1 quarantined for prompt injection) |
+
+These are small, fictional records: the latency numbers say nothing about long documents (see Limitations).
+
+### Drug-class expansion (dev evidence only)
+
+The single test error was *"Quel bêtabloquant prend-il ?"*: the record says *"Bisoprolol"*, and nothing links the two words. `app/drug_classes.py` maps common drug classes (French, with English and Arabic variants) to their molecules; when a question names a class, MedRAG searches with one extra query listing the molecules. The LLM still answers the user's own question and must still refuse if no molecule of that class is in the record.
+
+It was evaluated on **17 new dev questions committed before the fix** (`eval/questions_dev_classes.json`, see the git history): 11 answerable, and 6 traps that name a class the patient does **not** take. Same threshold (0.0034), nothing tuned on them.
+
+| 17 new dev questions | Expansion off | Expansion on |
+|---|---|---|
+| Answer accuracy | 4/11 (36%, CI 15–65%) | **10/11 (91%, CI 62–98%)** |
+| Retrieval hit@5 | 4/11 | 11/11 |
+| Traps refused | 6/6 (gate 5, LLM 1) | **6/6** (gate 4, LLM 2) |
+| Latency p50 (search p50) | 3.77 s (1.54 s) | 6.54 s (3.03 s) |
+
+Paired on the same questions: 6 went from wrong to right, 0 from right to wrong (exact McNemar p ≈ 0.03, a small-sample signal, not a general claim). No regression on the 32 dev questions: 18/20 correct and 12/12 refused, with and without expansion, same two errors. Costs, stated plainly: about +1.5 s of search on questions that name a class (one more query for the reranker), and one trap now passes the gate and is refused only by the LLM, so the gate's margin is smaller. The remaining error (*"bêta-2 agoniste de longue durée"*) retrieves the right page but the LLM refuses. **The held-out test set cannot measure this fix** (it revealed the problem, and the table was written knowing it); a new test set is needed. Expansion is on by default; set `DRUG_CLASS_EXPANSION=false` to reproduce the test-set configuration.
 
 ---
 
@@ -138,7 +174,7 @@ The first start downloads the embedding model (~470 MB) and the reranker (~2.3 G
 pytest
 ```
 
-The **32 tests** run offline, without an API key or model download (fake embeddings, LLM and reranker). They cover upload validation, injection quarantine, the relevance gate (an off-topic question is refused **and the LLM is never called**), the gate's resistance to a bad rewrite, the answer using the user's question, grounding, negation-aware alerts, rank fusion, the ChromaDB fallback and API errors. Key tests were mutation-checked: removing the protected behaviour makes them fail.
+The **38 tests** run offline, without an API key or model download (fake embeddings, LLM and reranker). They cover upload validation, injection quarantine, the relevance gate (an off-topic question is refused **and the LLM is never called**), the gate's resistance to a bad rewrite, the answer using the user's question, grounding, negation-aware alerts, rank fusion, the ChromaDB fallback, drug-class expansion and API errors. Key tests were mutation-checked: removing the protected behaviour makes them fail.
 
 ### 5. Reproduce the evaluation
 
@@ -146,10 +182,14 @@ The **32 tests** run offline, without an API key or model download (fake embeddi
 python -m scripts.make_eval_corpus                         # 4 records, dev (32) + test (19) questions
 python -m scripts.evaluate --calibrate --rewrite           # dev: ROC-AUC, leave-one-out, threshold
 python -m scripts.evaluate --split dev  --threshold 0.0034 # dev, full pipeline
-python -m scripts.evaluate --split test --threshold 0.0034 # held-out test, run once
+python -m scripts.evaluate --split test --threshold 0.0034 --drug-classes off # held-out test, run once (37c22c8 config)
+python -m scripts.evaluate --split dev --tag dev_latency --drug-classes off   # latency breakdown + machine
+python -m scripts.evaluate --split dev_classes --drug-classes off             # drug classes, before
+python -m scripts.evaluate --split dev_classes --drug-classes on              # drug classes, after
+python -m scripts.corpus_stats                                               # documents, pages, chunks
 ```
 
-`--calibrate --split test` is refused on purpose. Results vary slightly between runs because the rewriting LLM is not fully deterministic.
+`--calibrate` on any split other than dev is refused on purpose. Results vary slightly between runs because the rewriting LLM is not fully deterministic.
 
 ---
 
@@ -183,11 +223,12 @@ app/
 ├── document_loader.py  # PDF extraction and chunking
 ├── embeddings.py       # multilingual embeddings
 ├── llm_chain.py        # LLM factory and answer prompt
+├── drug_classes.py     # drug class -> molecules table, query expansion
 ├── patient_summary.py  # patient cards
 └── report_generator.py # PDF reports
 frontend/ui.py          # Streamlit interface
-scripts/                # evaluation corpus and evaluation, model checks, reranker diagnosis
-eval/                   # questions, results (dev and test)
+scripts/                # evaluation corpus and evaluation, corpus stats, model checks, reranker diagnosis
+eval/                   # questions (dev, test, dev_classes) and results
 tests/                  # pytest suite (offline)
 ```
 
@@ -196,8 +237,9 @@ tests/                  # pytest suite (offline)
 ## Limitations
 
 - **Small, fictional benchmark** (4 records, 51 questions). The confidence intervals are wide, and the results do not transfer to real clinical data without a proper study.
-- **Vocabulary gap between a drug class and a drug name.** The single test error: *"Quel bêtabloquant prend-il ?"* was refused because the record says *"Bisoprolol"*, never "bêtabloquant" (same pattern on dev: *"inhalateur de secours"* vs *"Traitement de crise : Salbutamol"*). The reranker has no medical ontology. Future work: drug-class and synonym expansion (e.g. ATC classes), evaluated on a new held-out set.
-- **Latency on long records is not measured**: the benchmark records have 3–4 chunks. `RERANK_TOP_N` (8) caps the cross-encoder cost, which is about 0.3 s per (question, chunk) pair for bge on a laptop CPU.
+- **Vocabulary gaps remain.** The drug-class table is small, hand-written and only evaluated on dev questions (see above); a class it does not list falls back to the old behaviour. Other synonyms are not covered (dev error: *"inhalateur de secours"* vs *"Traitement de crise : Salbutamol"*). Future work: a standard ontology (e.g. ATC classes) and a new held-out test set.
+- **Latency on long records is not measured**: the benchmark and demo records have 3–4 chunks each.
+- A rewrite that only changes punctuation (*"départ ?"* → *"départ?"*) is treated as a second query, so the reranker works twice (about +1 s, visible in the latency run). Not yet optimised. `RERANK_TOP_N` (8) caps the cross-encoder cost, which is about 0.3 s per (question, chunk) pair for bge on a laptop CPU.
 - The grounding judge is itself an LLM and can miss unsupported sentences.
 - Scanned PDFs (images without text) are not supported (no OCR).
 - Injection screening is pattern-based: it stops common attacks, not every possible one.
